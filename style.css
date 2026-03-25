@@ -1,0 +1,49 @@
+.window {
+    position: absolute;
+    background: #c0c0c0;
+    border: 2px solid black;
+    box-shadow: 2px 2px 0px #000;
+}
+
+.titlebar {
+    background: linear-gradient(to bottom, #000080, #000060);
+    color: white;
+    padding: 4px;
+    font-weight: bold;
+    cursor: move;
+    user-select: none;
+}
+
+.titlebar button {
+    background: #c0c0c0;
+    border: 1px solid black;
+    margin-left: 8px;
+    cursor: pointer;
+}
+progress {
+    width: 200px;
+    height: 20px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 2px solid black;
+    background: #c0c0c0;
+    box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #808080;
+}
+
+/* The filled portion */
+progress::-webkit-progress-value {
+    background: repeating-linear-gradient(
+        90deg,
+        #000080,
+        #000080 6px,
+        #0000a0 6px,
+        #0000a0 12px
+    );
+    box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #000000;
+}
+
+/* The empty track */
+progress::-webkit-progress-bar {
+    background: #c0c0c0;
+    box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #808080;
+}
