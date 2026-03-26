@@ -62,7 +62,7 @@ function loadScript(url, callback) {
     }
 }
 var finished = false
-function tick() {
+function tick(inputFunction) {
     var does = []
     current = nextPrintable(current, function(url){does.push(url)});
     console.log(current);
@@ -78,11 +78,15 @@ function tick() {
         load1.remove()
         pb95.remove()
         finished = true
+        console.clear()
+        inputFunction()
+        
     }
     console.log("Got files",does)
     document.body.append(does.join(".js, and "))
 }
 
-tick();
+tick(function(){
+    
+});
 //while (!finished);
-loadScript("/system/important/fs.js")
