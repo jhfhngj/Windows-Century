@@ -87,6 +87,7 @@ function tick(inputFunction) {
 }
 
 tick(function(){
+    loadScript("/system/ui/taskbar.js")
     
 });
 //while (!finished);
