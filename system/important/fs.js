@@ -42,7 +42,7 @@ var win = new WindowCreator();
 
 // Warning text
 win.newText(
-    "This will erase all apps, files, and settings in Windows CY.\nYour system will reboot after reset."
+    "This will erase all apps, files, and settings in Windows CY.")win.newText("Your system will reboot after reset."
 );
 
 // Reset button
