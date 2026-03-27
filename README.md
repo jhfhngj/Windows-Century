@@ -22,6 +22,9 @@ The system includes:
 
 Everything lives inside the browser.
 
+### Note
+The GitHub Pages hosting of Windows Century isn't working right now. Soon I'll set up yet another server and host it there, but in the meantime you can get Python, run `python3 -m http.server` in Windows Century's directory, and go to localhost:8000 in your browser. Don't worry, you'll see later that (spoiler alert) the user files aren't on server's disk, it's on client's disk, so you'll have so much space.
+
 ---
 
 ## 📁 Filesystem
