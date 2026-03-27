@@ -42,11 +42,11 @@ var win = new WindowCreator();
 
 // Warning text
 win.newText(
-    "This will erase all apps, files, and settings in Windows97.\nYour system will reboot after reset."
+    "This will erase all apps, files, and settings in Windows CY.\nYour system will reboot after reset."
 );
 
 // Reset button
-win.newButton("Reset Windows97", async function () {
+win.newButton("Reset Windows CY", async function () {
     await reinstall();     // wipe FS + reinstall fresh
     location.reload();     // simulate reboot
 });
@@ -150,6 +150,6 @@ export function createDirTreeTo(path) {
 // INITIALIZE FS
 // ------------------------------
 console.log("fs.js loaded");
-console.log("fs.js is currently reloading or creating Windows97 disk...");
+console.log("fs.js is currently reloading or creating Windows CY disk...");
 
 fs = await loadFS(); // IMPORTANT FIX

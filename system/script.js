@@ -1,4 +1,4 @@
-// System97
+// System CY
 const FIRST = 97;   // " "
 const LAST  = 122;  // "Z"
 const ILLEGAL = new Set(['\\','/',':','|','<','>','"','*','?']);
