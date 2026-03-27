@@ -14,7 +14,7 @@
     user-select: none;
 }
 
-.titlebar button {
+button {
     background: #c0c0c0;
     border: 1px solid black;
     margin-left: 8px;
@@ -48,41 +48,29 @@ progress::-webkit-progress-bar {
     box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #808080;
 }
 
-#taskbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 32px;
-    background: #c0c0c0;
-    border-top: 2px solid white;
-    display: flex;
-    align-items: center;
-}
-#taskbar #start-button {
-    all: unset;            /* nukes browser button styles */
-    display: flex;         /* NOW flex works */
-    align-items: center;
-    gap: 4px;
-
-    padding: 2px 6px;
-    height: 22px;
-
-    background: #dcdcdc;
-    border: 2px outset #fff;
-    cursor: pointer;
-
-    font-family: "MS Sans Serif", sans-serif;
-    font-size: 12px;
-}
-
-
-#taskbar #start-button:active {
-    border: 2px inset #fff;
-}
 
 .start-icon {
     width: 16px;
     height: 16px;
     image-rendering: pixelated;
 }
+
+.win95-button {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 2px 6px;
+    background: #c0c0c0;
+    border: 2px outset #fff;
+    font-family: "MS Sans Serif", sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.win95-button:active {
+    border: 2px inset #fff;
+}
+

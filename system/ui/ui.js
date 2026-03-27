@@ -1,5 +1,5 @@
 function addMiniDIV(minidiv) {
-    os.appendChild(minidiv);
+    document.body.appendChild(minidiv);
 }
 export class WindowCreator
 {
@@ -24,6 +24,7 @@ export class WindowCreator
         btn.textContent = text
         btn.onclick = action
         btn.id = id
+        btn.className = "win95-button"
         this.body.appendChild(btn)
     }
     get output() {
@@ -34,6 +35,11 @@ export class WindowCreator
         frm.src = url
         frm.id = id
         this.body.appendChild(frm)
+    }
+    newInput(id){
+        var ipt = document.createElement("input")
+        ipt.id = id
+        this.body.appendChild(ipt)
     }
 }
 function dragElement(elmnt,elmnt2) {
@@ -95,7 +101,9 @@ export function renderWindow(title, bodyy, width, height) {
     titleEl.textContent = title;
 
     var remSelf = document.createElement("button");
+    remSelf.className = "win95-button"
     remSelf.textContent = "X";
+    remSelf.style.color = "#000"
     remSelf.onclick = function () {
         windw.remove();
     };
@@ -127,7 +135,7 @@ export function renderBackground(url) {
     bg.style.width = "100vw";
     bg.style.height = "100vh";
     bg.style.objectFit = "fill"; // now this works
-    bg.style.zIndex = "-1";
+    bg.style.zIndex = "-1234567890";
     bg.style.pointerEvents = "none";
 
     document.body.style.margin = "0";

@@ -66,28 +66,33 @@ function tick(inputFunction) {
     var does = []
     current = nextPrintable(current, function(url){does.push(url)});
     console.log(current);
-    var aCr = "/system/startupscripts/"+current+".js"
-    console.log("Testing for",aCr+"...")
+
+    var aCr = "/system/startupscripts/" + current + ".js"
+    console.log("Testing for", aCr + "...")
+
     try {
         loadScript(aCr)
     } catch {}
+
     pb95.value = pb95.value + 1
+
     if (current.length <= 2) {
-    setTimeout(tick, 5);
+        setTimeout(() => tick(inputFunction), 5)
     } else {
         load1.remove()
         pb95.remove()
         finished = true
         console.clear()
+
         inputFunction()
-        
+
     }
-    console.log("Got files",does)
+
+    console.log("Got files", does)
     document.body.append(does.join(".js, and "))
 }
-
-tick(function(){
+function finch() {
     loadScript("/system/ui/taskbar.js")
-    
-});
+}
+tick(finch);
 //while (!finished);
