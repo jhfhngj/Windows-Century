@@ -50,10 +50,12 @@ Windows Century includes several basic apps:
 
 - **Notes** — create and save text files  
 - **Text Reader** — open and view files  
-- **Image Viewer** — load images from URLs  
-- **Files** — browse directories  
-- **Reset this PC** — reinstall the OS  
-- **sb.js** — ooh pretty images  
+- **Image Viewer** — Load images from URLs 
+- **Files** — Browse directories in just a few clicks and types.
+- **Reset this PC** — Reinstall the OS swiftly and easily.
+- **sb.js** — ooh pretty images
+- **Turbo-V** — Emulate many OSes, including Windows 96-97, and Windows Century.
+- **Splinternet Opener** — Browser
 
 Apps live under `/apps/` inside the virtual filesystem.
 
