@@ -1,7 +1,9 @@
 # 🌐 **Windows Century**
 A browser‑native operating system simulation with a persistent virtual filesystem, modular apps, and a retro‑inspired windowing environment — all running client‑side.
 
-<img src="w97.png" alt="Windows Century's logo. Looks like Windows 3.1's logo, but instead of the Windows, it's a peanut butter sandwich's insides or Tac Nyan/Nayn's pop tart." width="256" align="center">
+<p align="center">
+  <img src="w97.png" alt="Windows Century logo — looks like Windows 3.1’s logo, but the panes are replaced with a peanut‑butter‑sandwich / Tac Nyan pop‑tart filling." width="256">
+</p>
 
 ---
 
@@ -47,8 +49,8 @@ Windows Century includes several basic apps:
 - **Text Reader** — open and view files  
 - **Image Viewer** — load images from URLs  
 - **Files** — browse directories  
-- **Reset this PC** — reinstall the OS 
-- **sb.js** — ooh pretty images
+- **Reset this PC** — reinstall the OS  
+- **sb.js** — ooh pretty images  
 
 Apps live under `/apps/` inside the virtual filesystem.
 
@@ -63,23 +65,20 @@ Apps are built using a small UI toolkit located under `/system/ui/ui.js`:
 
 This makes it easy to create new apps with minimal boilerplate.
 
-If you want to make an app that uses the filesystem, no I am not forgetful, there is a nice FS interface located under `/system/important/fs.js`:
+If you want to make an app that uses the filesystem, the FS interface lives under `/system/important/fs.js`:
 
-- `listDir()` — returns a list filled with 2-length lists with of each first element being the name and second element being the contents.
-- `createDirTreeTo()` — Do I even need to explain this?
-- `newFile()` — Creates a new file with the containing directory, the filename, and the contents.
-- `readFile()` — Returns content of file at containing directory/filename.
-- `removeFile()` — `del /path/to/file`
-- `copyFile()` — Copies a file to a new file.
-- `renameFile()` — Renames a file.
-- `reinstall()` — Reinstalls Windows Century.
+- `listDir(path)` — returns `[name, value]` pairs  
+- `createDirTreeTo(path)` — ensures a directory path exists  
+- `newFile(path, name, contents)` — create a file  
+- `readFile(path, name)` — read a file  
+- `removeFile(path, name)` — delete a file  
+- `copyFile(path1, name1, path2, name2)` — copy a file  
+- `renameFile(path, name, newName)` — rename a file  
+- `reinstall()` — reinstall Windows Century  
 
-> *'But why can't I just write to system?'*
-
-Listen here, the system is at the real website.
-Not the filesystem, not some cool directory...
-The website.
-Okay?
+> *“But why can’t I just write to system?”*  
+> Because the system is the real website, not the virtual filesystem.  
+> You’re editing the OS, not the server. Okay?
 
 ---
 
@@ -106,9 +105,9 @@ Example structure:
 ```js
 import { WindowCreator, renderWindow } from "/system/ui/ui.js";
 
-const win = new WindowCreator
-win.newText("Hello world")
-renderWindow("Foo bar bad baf doo", win.output, 400, 300)
+const win = new WindowCreator();
+win.newText("Hello world");
+renderWindow("Foo bar bad baf doo", win.output, 400, 300);
 ```
 
 The OS loads and runs apps dynamically.
