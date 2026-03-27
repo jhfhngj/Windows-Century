@@ -2,7 +2,7 @@
 // FS ROOT
 // ------------------------------
 function freshFS() {
-    return { "/": {"apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+    return { "/": {"CenturyFS":"5.0","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
     bodyDiv.newText("Or is it?","")
@@ -41,9 +41,8 @@ import { reinstall } from "/system/important/fs.js";
 var win = new WindowCreator();
 
 // Warning text
-win.newText(
-    "This will erase all apps, files, and settings in Windows CY.")win.newText("Your system will reboot after reset."
-);
+win.newText("This will erase all apps, files, and settings in Windows CY.");
+win.newText("Your system will reboot after reset.");
 
 // Reset button
 win.newButton("Reset Windows CY", async function () {
@@ -53,6 +52,94 @@ win.newButton("Reset Windows CY", async function () {
 
 // Render window
 renderWindow("Reset this PC", win.output, 360, 180);
+`,"Notes.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js";
+import { newFile } from "/system/important/fs.js";
+
+let myWin = new WindowCreator();
+
+myWin.newInput("txt");
+myWin.newText("Save to... (Filename only plz)", "");
+myWin.newInput("sve");
+
+myWin.newButton("Save", function () {
+    const filename = document.getElementById("sve").value;
+    const contents = document.getElementById("txt").value;
+
+    newFile("/notes/", filename, contents);
+}, "btn");
+
+renderWindow("Notes", myWin.output, 400, 300);
+`,"TextRead":`import { WindowCreator, renderWindow } from "/system/ui/ui.js";
+import { readFile } from "/system/important/fs.js";
+
+let myWin = new WindowCreator();
+
+myWin.newText("Read from path...", "");
+myWin.newInput("path");
+
+myWin.newText("Filename...", "");
+myWin.newInput("fn");
+
+myWin.newText("Output:", "");
+myWin.newInput("op");
+
+myWin.newButton("Read to output", function () {
+    const path = document.getElementById("path").value;
+    const filename = document.getElementById("fn").value;
+    const output = document.getElementById("op");
+
+    output.value = readFile(path, filename);
+});
+
+renderWindow("Text file reader", myWin.output, 400, 300);
+`, "Files.js":`import { renderWindow, WindowCreator } from "/system/ui/ui.js";
+import { listDir } from "/system/important/fs.js";
+
+let curdir = "/";
+
+let win = new WindowCreator();
+
+// UI elements
+win.newText("", "cr");               // current directory label
+win.newText("Entries:", "en");       // entries list
+win.newText("Enter abs path to enter:");
+win.newInput("te");                  // path input
+win.newButton("Enter", function () {
+    curdir = document.getElementById("te").value;
+    update();
+});
+
+// Render window
+renderWindow("Files", win.output, 400, 300);
+
+// After render, grab elements
+const current = document.getElementById("cr");
+const entries = document.getElementById("en");
+const dirInput = document.getElementById("te");
+
+// Update function
+function update() {
+    const dir = listDir(curdir);
+
+    current.textContent = "Directory: " + curdir;
+
+    // reset entries
+    entries.textContent = "Entries:";
+
+    dir.forEach(([name, value]) => {
+        if (typeof value === "object") {
+            entries.textContent += "  [DIR] " + name;
+        } else {
+            entries.textContent += "  [FILE] " + name;
+        }
+    });
+}
+
+// Live update on typing
+dirInput.oninput = update;
+
+// Initial load
+update();
 `}} };
 }
 
@@ -61,12 +148,20 @@ let fs; // will be loaded asynchronously
 // ------------------------------
 // SAVE / LOAD
 // ------------------------------
-async function saveFS() {
+async function saveFS(fsb) {
+    if (fsb) {
+        const root = await navigator.storage.getDirectory();
+        const file = await root.getFileHandle("w97.json", { create: true });
+        const writable = await file.createWritable();
+        await writable.write(JSON.stringify(fsb));
+        await writable.close();
+    } else {
     const root = await navigator.storage.getDirectory();
     const file = await root.getFileHandle("w97.json", { create: true });
     const writable = await file.createWritable();
     await writable.write(JSON.stringify(fs));
     await writable.close();
+    }
 }
 
 async function loadFS() {
@@ -130,7 +225,8 @@ export function renameFile(path, name, newName) {
 }
 
 export async function reinstall() {
-    await saveFS(freshFS())
+    fs = freshFS();   // replace in-memory filesystem
+    await saveFS();   // save the new one to disk
 }
 
 // ------------------------------
@@ -153,3 +249,5 @@ console.log("fs.js loaded");
 console.log("fs.js is currently reloading or creating Windows CY disk...");
 
 fs = await loadFS(); // IMPORTANT FIX
+
+console.log("fs.js version",readFile("/","CenturyFS"))
