@@ -6,7 +6,7 @@
 }
 
 .titlebar {
-    background: linear-gradient(to bottom, #800000, #600000);
+    background: linear-gradient(to right, #800000, #600000);
     color: white;
     padding: 4px;
     font-weight: bold;
@@ -72,4 +72,8 @@ progress::-webkit-progress-bar {
 
 .win95-button:active {
     border: 2px inset #fff;
+}
+
+img {
+    image-rendering: pixelated;
 }

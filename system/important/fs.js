@@ -2,7 +2,7 @@
 // FS ROOT
 // ------------------------------
 function freshFS() {
-    return { "/": {"CenturyFS":"5.0","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+    return { "/": {"CenturyFS":"6.5","bg":"/system/bg.png","bgtype":"system","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
     bodyDiv.newText("Or is it?","")
@@ -213,6 +213,25 @@ renderWindow("Cracking the Doorway", win.output, 1080, 720);
 // NOW the iframe exists in the DOM
 const url = "https://jhfhngj.github.io/Cracking-the-Doorway/";
 document.getElementById("b").src = url;
+`,"Wallpaper Setter.js":`import { WindowCreator, renderBackground, renderWindow } from "/system/ui/ui.js";
+import { newFile } from "/system/important/fs.js";
+
+const win = new WindowCreator();
+
+win.newText("Base64 encoded without data URI note");
+win.newInput("pth");
+
+win.newButton("Set", function () {
+    const path = document.getElementById("pth").value;
+
+    const full = "data:image/png;base64," + path;
+
+    newFile("/", "bg", full);
+    newFile("/", "bgtype", "system"); // or whatever you want
+    renderBackground(full);
+});
+
+renderWindow("Wallpaper Setter", win.output, 400, 300);
 `}} };
 }
 

@@ -2,7 +2,7 @@
 A browser‑native operating system simulation with a persistent virtual filesystem, modular apps, and a retro‑inspired windowing environment — all running client‑side.
 
 <p align="center">
-  <img src="w97.png" alt="Windows Century logo — looks like Windows 3.1’s logo, but the panes are replaced with a peanut‑butter‑sandwich / Tac Nyan pop‑tart filling." width="256">
+  <img src="w97.png" alt="Windows Century logo — looks like Windows 3.1’s logo, but the panes are replaced with a peanut‑butter‑sandwich / Tac Nyan pop‑tart filling." width="256" style="image-rendering: pixelated">
 </p>
 
 ---
@@ -67,7 +67,7 @@ Apps live under `/apps/` inside the virtual filesystem.
 Apps are built using a small UI toolkit located under `/system/ui/ui.js`:
 
 - `WindowCreator` — build window contents  
-- `renderWindow()` — display a window  
+- `renderWindow(title, body, width, height)` — display a window  
 - Inputs, buttons, text, images, iframes, etc.  
 
 This makes it easy to create new apps with minimal boilerplate.

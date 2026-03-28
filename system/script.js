@@ -62,6 +62,7 @@ function loadScript(url, callback) {
     }
 }
 var finished = false
+loadScript("/system/ui/fs.js")
 function tick(inputFunction) {
     var does = []
     current = nextPrintable(current, function(url){does.push(url)});
