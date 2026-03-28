@@ -30,10 +30,15 @@ export class WindowCreator
     get output() {
         return this.body
     }
-    newFrame(url,id){
+    newFrame(url,id, width,height){
+        if (!width){width=300}
+        if (!height){height=300}
         var frm = document.createElement("iframe")
         frm.src = url
         frm.id = id
+        frm.style.height = height
+        frm.style.width = width
+        frm.style.display = "flex"
         this.body.appendChild(frm)
     }
     newInput(id){
@@ -86,6 +91,8 @@ function dragElement(elmnt,elmnt2) {
 export function renderWindow(title, bodyy, width, height) {
     var windw = document.createElement("div");
     windw.className = "window";
+    windw.style.display = "flex";
+    windw.style.flexDirection = "column";
 
     // Title bar
     var titlebar = document.createElement("div");
@@ -113,7 +120,9 @@ export function renderWindow(title, bodyy, width, height) {
     windw.appendChild(titlebar);
 
     // Body content
-    bodyy.style.paddingLeft = "10px";
+    bodyy.style.flex = "1";          // <-- THIS makes the body fill the window
+    bodyy.style.padding = "0";       // optional, prevents shrinking
+    bodyy.style.overflow = "hidden"; // keeps iframe clean
     windw.appendChild(bodyy);
 
     // Size

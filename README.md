@@ -57,6 +57,7 @@ Windows Century includes several basic apps:
 - **Turbo-V** — Emulate many OSes, including Windows 96-97, and Windows Century.
 - **Splinternet Opener** — Browser
 - **Import File** — Imports a file from... vrrrrr... the... real OS.
+- **Cracking the Doorway** — My fangame!
 
 Apps live under `/apps/` inside the virtual filesystem.
 
