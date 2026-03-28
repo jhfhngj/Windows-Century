@@ -73,6 +73,7 @@ for (const [filename, code] of listDir("/apps/")) {
     menu.appendChild(button)
 }
 menu.style.opacity = "0"
+menu.style.pointerEvents = "none"
 menu.style.position = "absolute"
 menu.style.left = "0px"
 menu.style.bottom = "24px"   // taskbar height
@@ -90,9 +91,11 @@ sb.onclick = function(){
     if (menuOpen) {
         // Show menu
         menu.style.opacity = "1"
+        menu.style.pointerEvents = "all"
     } else {
         // Hide menu
         menu.style.opacity = "0"
+        menu.style.pointerEvents = "none"
     }
 }
 document.body.appendChild(menu)
