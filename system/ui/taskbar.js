@@ -85,8 +85,16 @@ menu.style.flexDirection = "column"
 
 var menuOpen = false
 // Add start button listener
-sb.onclick = function(){
-    // Menu
+    sb.onclick = function(){
+    // Menu refresh
+    menu.replaceChildren()
+    for (const [filename, code] of listDir("/apps/")) {
+    const button = document.createElement("button")
+    button.className = "win95-button"
+    button.textContent = filename.replace(".js", "")
+    button.onclick = function(){loadScript(code)}
+    menu.appendChild(button)
+    }
     menuOpen = !menuOpen
     if (menuOpen) {
         // Show menu
