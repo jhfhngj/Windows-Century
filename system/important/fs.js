@@ -267,9 +267,6 @@ renderWindow("Century News", win.output, 400, 300);
 `,"CenturyAI.js":`import { renderWindow,WindowCreator } from "/system/ui/ui.js";
 const win = new WindowCreator
 win.newInput("text")
-function respond(text){
-    document.getElementById("output").textContent = text
-}
 function choice(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
