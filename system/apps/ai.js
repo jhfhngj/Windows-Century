@@ -105,30 +105,37 @@ function generateFromRegex(regex) {
 
     return parse();
 }
-function getInp(){
-    return document.getElementById("text").value
+function respond(text){
+    document.getElementById("output").textContent = text;
 }
+
+function getInp(){
+    return document.getElementById("text").value;
+}
+
 function isGreeting(text) {
     text = text.toLowerCase().trim();
     return /^(h[ei]y?|yo|g(ood )?(morning|evening|day)|sup|salut|hola|ciao)/.test(text);
 }
+
 function greeting(){
-    return generateFromRegex("/^(h[ei]y?|yo|g(ood )?(morning|evening|day)|sup|salut|hola|ciao)/") + " how are you?"
+    const greets = ["hi", "hey", "hello", "yo", "sup", "hola", "salut", "ciao"];
+    return choice(greets) + ", how are you?";
 }
+
 function think(){
-    var gah = getInp().toLowerCase()
-    // User output: Hello!
-    // AI output: Hello. How are you?
-    // User output: I feel like my computer is slow now.
-    // AI output: Why do you feel like your computer is slow now?
-    gah.replace("i","you")
+    let gah = getInp().toLowerCase().trim();
+
+    // pronoun flip
+    gah = gah.replace(/\bi\b/g, "you");
+
     if (isGreeting(gah)) {
-        respond(greeting())
+        respond(greeting());
     } else {
-        // Parse it hard.
-        respond("why do you "+gah+"?")
+        respond("why do you " + gah + "?");
     }
 }
+
 win.newButton("Talk to me, CenturyAI, Talk to me!", think)
 win.newText("AI output:")
 win.newText("","output")
