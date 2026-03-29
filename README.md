@@ -131,7 +131,6 @@ The OS loads and runs apps dynamically.
     /important → filesystem logic
 /apps          → user apps (inside virtual FS)
 /boot          → bootloader + startup scripts
-/user          → nothing
 index.html
 ```
 
