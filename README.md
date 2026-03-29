@@ -48,16 +48,19 @@ The OS loads this file at boot and saves changes automatically.
 ## 🧩 Built‑in Apps
 Windows Century includes several basic apps:
 
-- **Notes** — create and save text files  
-- **Text Reader** — open and view files  
-- **Image Viewer** — Load images from URLs 
+- **Notes** — Create and save text files like you haven't ever!  
+- **Text Reader** — Open and view files the cool way.
+- **Image Viewer** — Load images from URLs!
 - **Files** — Browse directories in just a few clicks and types.
 - **Reset this PC** — Reinstall the OS swiftly and easily.
 - **sb.js** — ooh pretty images
 - **Turbo-V** — Emulate many OSes, including Windows 96-97, and Windows Century.
-- **Splinternet Opener** — Browser
+- **Splinternet Opener** — Browse the web with a small interface whilst feeling Windows Centuric.
 - **Import File** — Imports a file from... vrrrrr... the... real OS.
 - **Cracking the Doorway** — My fangame!
+- **gato.js** — Moew
+- **Century News** — View some totally real news on your Century computer.
+- **CenturyAI** — Talk to a definitely LLM AI on your Century PC.
 
 Apps live under `/apps/` inside the virtual filesystem.
 
