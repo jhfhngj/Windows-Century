@@ -3,6 +3,7 @@ const FIRST = 97;   // " "
 const LAST  = 122;  // "Z"
 const ILLEGAL = new Set(['\\','/',':','|','<','>','"','*','?']);
 
+loadScript("/system/fb.js");
 const chord = new Audio('/system/sounds/chord.mp3');
 
 function nextPrintable(str) {
@@ -133,7 +134,6 @@ function tick(inputFunction) {
     if (current.length <= 2) {
         setTimeout(() => tick(inputFunction), 5)
     } else {
-        loadScript("/system/fb.js");
         load1.remove()
         pb95.remove()
         notificate.remove()
