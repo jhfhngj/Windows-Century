@@ -72,12 +72,40 @@ var finished = false
 loadScript("/system/important/fs.js")
 import { renderBackground, renderWindow, WindowCreator } from "/system/ui/ui.js";
 import { reinstall, newFile } from "/system/important/fs.js";
+async function downloadFS() {
+    const root = await navigator.storage.getDirectory();
+    const fileHandle = await root.getFileHandle("w97.json");
+    const file = await fileHandle.getFile();
+
+    const url = URL.createObjectURL(file);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "w97.json";
+    a.click();
+    URL.revokeObjectURL(url);
+}
+async function importFS(file) {
+    const root = await navigator.storage.getDirectory();
+    const handle = await root.getFileHandle("w97.json", { create: true });
+    const writable = await handle.createWritable();
+    await writable.write(await file.arrayBuffer());
+    await writable.close();
+}
 function safemode() {
     // Create Recovery Mode window
     const win = new WindowCreator
     win.newText("You have entered Recovery Mode. This indicates you want to fix something. What would you like to do as for your computer?")
     win.newButton("Reset",function(){reinstall();location.reload()})
     win.newButton("Enable Firstboot",function(){newFile("/","firstboot","1");location.reload()})
+    win.newButton("Create Backup",async function(){downloadFS()})
+    win.newButton("Restore from Backup",async function(){var input = document.createElement("input");
+        input.type = "file";
+        input.onchange = async () => {
+            await importW97(input.files[0]);
+            console.log("Imported!");
+        };
+        input.click();
+        })
     win.newButton("Exit",function(){location.reload()})
     renderWindow("Recovery Mode",win.output,innerWidth,innerHeight)
 }
