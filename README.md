@@ -9,7 +9,7 @@ A browser‑native operating system simulation with a persistent virtual filesys
 
 ## 🚀 Overview
 Windows Century is a fake OS that runs entirely in your browser.  
-It’s inspired by the Windows93/96/97/99 lineage, but built with a more structured, modern approach.
+It’s inspired by the Windows93/96/97/99 lineage, but built with a more true, simple approach.
 
 The system includes:
 
@@ -22,8 +22,11 @@ The system includes:
 
 Everything lives inside the browser.
 
-### Note
-The GitHub Pages hosting of Windows Century isn't working right now. Soon I'll set up yet another server and host it there, but in the meantime you can get Python, run `python3 -m http.server` in Windows Century's directory, and go to localhost:8000 in your browser. Don't worry, you'll see later that (spoiler alert) the user files aren't on server's disk, it's on client's disk, so you'll have so much space.
+### Notes
+
+1. The GitHub Pages hosting of Windows Century isn't working right now. Soon I'll set up yet another server and host it there, but in the meantime you can get Python, run `python3 -m http.server` in Windows Century's directory, and go to localhost:8000 in your browser. Don't worry, you'll see later that (spoiler alert) the user files aren't on server's disk, it's on client's disk, so you'll have so much space.
+
+2. If you want a normal reset, reset once. If you want to reset the apps too and get the new version or new apps, reset twice.
 
 ---
 
@@ -43,6 +46,8 @@ This file contains:
 
 The OS loads this file at boot and saves changes automatically.
 
+Don't save an ISO, as the entire filesystem is in memory too.
+
 ---
 
 ## 🧩 Built‑in Apps
@@ -61,6 +66,7 @@ Windows Century includes several basic apps:
 - **gato.js** — Moew
 - **Century News** — View some totally real news on your Century computer.
 - **CenturyAI** — Talk to a definitely LLM AI on your Century PC.
+- **Notes 2.0** — Thought I wouldn't update Notes? WRONG! This is an updated version, after updating the internals to match the things normal users and developers need.
 
 Apps live under `/apps/` inside the virtual filesystem.
 
@@ -85,6 +91,7 @@ If you want to make an app that uses the filesystem, the FS interface lives unde
 - `copyFile(path1, name1, path2, name2)` — copy a file  
 - `renameFile(path, name, newName)` — rename a file  
 - `reinstall()` — reinstall Windows Century  
+- `splitFilenamePath()` — split a path into filename and path
 
 > *“But why can’t I just write to system?”*  
 > Because the system is the real website, not the virtual filesystem.  
@@ -116,7 +123,10 @@ Example structure:
 import { WindowCreator, renderWindow } from "/system/ui/ui.js";
 
 const win = new WindowCreator();
-win.newText("Hello world");
+var text = win.newText("Hello world");
+win.newButton("Date.now me", function(){
+    text.textContent = Date.now();
+});
 renderWindow("Foo bar bad baf doo", win.output, 400, 300);
 ```
 
@@ -127,18 +137,24 @@ The OS loads and runs apps dynamically.
 ## 📦 Project Structure
 ```
 /system
-    /ui        → window manager + UI toolkit
-    /important → filesystem logic
-/apps          → user apps (inside virtual FS)
-/boot          → bootloader + startup scripts
+    /ui             → window manager/UI toolkit + taskbar
+    /important      → filesystem logic
+    /libs           → libraries you may or may not need
+    /startupscripts → startup scripts
+    /script.js      → bootloader
 index.html
+(and more)
+
+In CenturyFS:
+/apps               → user apps
+(and more)
 ```
 
 ---
 
 ## 🧪 Status
 Windows Century is in early development.  
-Expect rough edges, missing features, and occasional browser‑storage quirks.
+Expect rough edges, missing features, and occasional bugs.
 
 ---
 
