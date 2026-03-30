@@ -12,12 +12,14 @@ export class WindowCreator
         image.id = id
         image.src = url
         this.body.appendChild(image)
+        return image
     }
     newText(text,id){
         var textt = document.createElement("p")
         textt.id = id
         textt.textContent = text
         this.body.appendChild(textt)
+        return textt
     }
     newButton(text,action,id){
         var btn = document.createElement("button")
@@ -26,6 +28,7 @@ export class WindowCreator
         btn.id = id
         btn.className = "win95-button"
         this.body.appendChild(btn)
+        return btn
     }
     get output() {
         return this.body
@@ -40,11 +43,25 @@ export class WindowCreator
         frm.style.width = width
         frm.style.display = "flex"
         this.body.appendChild(frm)
+        return frm
     }
     newInput(id){
         var ipt = document.createElement("input")
         ipt.id = id
         this.body.appendChild(ipt)
+        return ipt
+    }
+    newDiv(id){
+        var ipt = document.createElement("div")
+        ipt.id = id
+        this.body.appendChild(ipt)
+        return ipt
+    }
+    newTextArea(id){
+        var ta = document.createElement("textarea")
+        ta.id=id
+        this.body.appendChild(ta)
+        return ta
     }
 }
 function dragElement(elmnt,elmnt2) {
