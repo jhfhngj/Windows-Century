@@ -1,0 +1,10 @@
+body {
+    color:white;background-color: blue;
+    font-family: 'Consolas', monospace;
+}
+.windows {
+    color:blue;background-color: white;
+    text-align:center;
+    display:table;
+    margin: 0px auto 0px auto
+}

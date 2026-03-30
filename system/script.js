@@ -3,6 +3,8 @@ const FIRST = 97;   // " "
 const LAST  = 122;  // "Z"
 const ILLEGAL = new Set(['\\','/',':','|','<','>','"','*','?']);
 
+const chord = new Audio('/system/sounds/chord.mp3');
+
 function nextPrintable(str) {
     
     if (str === "") return String.fromCharCode(FIRST);
@@ -41,8 +43,11 @@ let pb95 = document.createElement("progress")
 pb95.value = 0
 pb95.max = 25**1+25**2
 pb95.style.width = '1000px'
+let notificate = document.createElement("p")
+notificate.textContent = "Alt+P to enter Recovery Mode"
 document.body.appendChild(load1)
 document.body.appendChild(pb95)
+document.body.appendChild(notificate)
 let current = "";
 function loadScript(url, callback) {
     try {
@@ -61,9 +66,29 @@ function loadScript(url, callback) {
         console.error("Error loading script:", err);
     }
 }
+let e = null;
+document.onkeydown = function(ev){e = ev}
 var finished = false
-loadScript("/system/ui/fs.js")
+loadScript("/system/important/fs.js")
+import { renderBackground, renderWindow, WindowCreator } from "/system/ui/ui.js";
+import { reinstall, newFile } from "/system/important/fs.js";
+function safemode() {
+    // Create Recovery Mode window
+    const win = new WindowCreator
+    win.newText("You have entered Recovery Mode. This indicates you want to fix something. What would you like to do as for your computer?")
+    win.newButton("Reset",function(){reinstall();location.reload()})
+    win.newButton("Enable Firstboot",function(){newFile("/","firstboot","1");location.reload()})
+    win.newButton("Exit",function(){location.reload()})
+    renderWindow("Recovery Mode",win.output,innerWidth,innerHeight)
+}
 function tick(inputFunction) {
+    if (e && e.altKey && e.key.toLowerCase() === "p") {
+        console.log("Alt + P detected!");
+        // RECOVERY MODE
+        renderBackground("/system/bg.png")
+        chord.play();
+        return safemode()
+    }
     var does = []
     current = nextPrintable(current, function(url){does.push(url)});
     console.log(current);
@@ -80,11 +105,12 @@ function tick(inputFunction) {
     if (current.length <= 2) {
         setTimeout(() => tick(inputFunction), 5)
     } else {
+        loadScript("/system/fb.js");
         load1.remove()
         pb95.remove()
+        notificate.remove()
         finished = true
         console.clear()
-
         inputFunction()
 
     }
