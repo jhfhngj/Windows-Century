@@ -2,7 +2,7 @@
 // FS ROOT
 // ------------------------------
 function freshFS() {
-    return { "/": {"CenturyFS":"9.9","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+    return { "/": {"CenturyFS":"10.0","repo":"https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
     bodyDiv.newText("Or is it?","")
@@ -419,10 +419,11 @@ win.newButton("Save to path", function(){
 
 renderWindow("Notes 2.0",win.output,500,500)
 `,"Century Packages.js":`import { WindowCreator, betterAlert, renderWindow } from "/system/ui/ui.js";
-import { newFile, splitFilenamePath } from "/system/important/fs.js";
+import { readFile, newFile, splitFilenamePath } from "/system/important/fs.js";
 
 const win = new WindowCreator();
-const repo = "https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/";
+const defaultrepo = "https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/";
+var repo = readFile("/","repo") || defaultrepo
 
 // PACKAGE LIST DISPLAY
 var packages = win.newTextArea();
@@ -463,6 +464,15 @@ win.newButton("Install!", function () {
 });
 
 renderWindow("Century Packages", win.output, 400, 300);
+`,"Settings.js":`import { newFile } from "/system/important/fs.js";
+import { WindowCreator,renderWindow,betterPrompt } from "/system/ui/ui.js";
+const win = new WindowCreator
+win.newText("Settings")
+win.newSplit()
+win.newButton("Change main package repository",function(){
+    betterPrompt("Repo?",function(val){newFile("/","repo",val)})
+})
+renderWindow("Settings",win.output,400,300)
 `}} };
 }
 

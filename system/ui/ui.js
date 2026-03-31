@@ -66,6 +66,11 @@ export class WindowCreator
     remove() {
         this.body.remove()
     }
+    newSplit(){
+        var sp = document.createElement("hr")
+        this.body.appendChild(sp)
+        return sp
+    }
 }
 
 function dragElement(elmnt,elmnt2) {
@@ -113,6 +118,18 @@ export function betterAlert(text) {
     const win = new WindowCreator
     win.newText(text)
     renderWindow("Message",win.body,300,300)
+}
+export function betterPrompt(text, callback) {
+    const win = new WindowCreator()
+    win.newText(text)
+    const input = win.newInput()
+
+    win.newButton("OK", () => {
+        callback(input.value)
+        win.remove()
+    })
+
+    renderWindow("Prompt", win.body, 300, 300)
 }
 
 var focused = null

@@ -1,8 +1,9 @@
 import { WindowCreator, betterAlert, renderWindow } from "/system/ui/ui.js";
-import { newFile, splitFilenamePath } from "/system/important/fs.js";
+import { readFile, newFile, splitFilenamePath } from "/system/important/fs.js";
 
 const win = new WindowCreator();
-const repo = "https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/";
+const defaultrepo = "https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/";
+var repo = readFile("/","repo") || defaultrepo
 
 // PACKAGE LIST DISPLAY
 var packages = win.newTextArea();
