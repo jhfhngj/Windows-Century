@@ -67,6 +67,7 @@ Windows Century includes several basic apps:
 - **Century News** — View some totally real news on your Century computer.
 - **CenturyAI** — Talk to a definitely LLM AI on your Century PC.
 - **Notes 2.0** — Thought I wouldn't update Notes? WRONG! This is an updated version, after updating the internals to match the things normal users and developers need.
+- **Century Packages** — Install stuff 'n' apps from a repo you define!
 
 Apps live under `/apps/` inside the virtual filesystem.
 
