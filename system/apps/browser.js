@@ -1,11 +1,12 @@
 import { WindowCreator, renderWindow } from "/system/ui/ui.js";
+import { URLer } from "/system/important/fsurl.js";
 
 const win = new WindowCreator();
 
 // Build UI
 win.newInput("a");
 win.newButton("🔍", function () {
-    const url = document.getElementById("a").value;
+    const url = URLer(document.getElementById("a").value);
     document.getElementById("b").src = url;
 });
 win.newFrame("", "b");

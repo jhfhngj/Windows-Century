@@ -2,7 +2,7 @@
 // FS ROOT
 // ------------------------------
 function freshFS() {
-    return { "/": {"CenturyFS":"9.7","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+    return { "/": {"CenturyFS":"9.9","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
     bodyDiv.newText("Or is it?","")
@@ -141,19 +141,20 @@ dirInput.oninput = update;
 // Initial load
 update();
 `,"Splinternet Opener.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js";
+import { URLer } from "/system/important/fsurl.js";
 
 const win = new WindowCreator();
 
 // Build UI
 win.newInput("a");
 win.newButton("🔍", function () {
-    const url = document.getElementById("a").value;
+    const url = URLer(document.getElementById("a").value);
     document.getElementById("b").src = url;
 });
 win.newFrame("", "b");
 
 // Render window
-renderWindow("Splinternet Opener", win.output, 500, 200);
+renderWindow("Splinternet Opener", win.output, 300, 300);
 
 // After render, elements exist
 `,"Turbo-V":`import { WindowCreator,renderWindow } from "/system/ui/ui.js";
