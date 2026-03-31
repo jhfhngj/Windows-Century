@@ -14,6 +14,15 @@
     user-select: none;
 }
 
+.unfocused {
+    background: linear-gradient(to right, #600000, #400000);
+    color: white;
+    padding: 4px;
+    font-weight: bold;
+    cursor: move;
+    user-select: none;
+}
+
 button {
     background: #c0c0c0;
     border: 1px solid black;

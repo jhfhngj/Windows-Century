@@ -70,8 +70,8 @@ function loadScript(url, callback) {
 let e = null;
 document.onkeydown = function(ev){e = ev}
 var finished = false
-loadScript("/system/important/fs.js")
-import { renderBackground, renderWindow, WindowCreator } from "/system/ui/ui.js";
+
+import { renderBackground, renderWindow, WindowCreator, betterAlert } from "/system/ui/ui.js";
 import { reinstall, newFile } from "/system/important/fs.js";
 async function downloadFS() {
     const root = await navigator.storage.getDirectory();
@@ -102,14 +102,16 @@ function safemode() {
     win.newButton("Restore from Backup",async function(){var input = document.createElement("input");
         input.type = "file";
         input.onchange = async () => {
-            await importW97(input.files[0]);
+            await importFS(input.files[0]);
             console.log("Imported!");
+            betterAlert("Imported!")
         };
         input.click();
         })
     win.newButton("Exit",function(){location.reload()})
     renderWindow("Recovery Mode",win.output,innerWidth,innerHeight)
 }
+loadScript("/system/sounds/chord.js")
 function tick(inputFunction) {
     if (e && e.altKey && e.key.toLowerCase() === "p") {
         console.log("Alt + P detected!");
@@ -140,7 +142,7 @@ function tick(inputFunction) {
         finished = true
         console.clear()
         inputFunction()
-
+        loadScript("/system/important/fs.js")
     }
 
     console.log("Got files", does)

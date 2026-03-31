@@ -63,7 +63,11 @@ export class WindowCreator
         this.body.appendChild(ta)
         return ta
     }
+    remove() {
+        this.body.remove()
+    }
 }
+
 function dragElement(elmnt,elmnt2) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (!document.getElementById(elmnt2.id)) {
@@ -105,11 +109,20 @@ function dragElement(elmnt,elmnt2) {
   }
 }
 
+export function betterAlert(text) {
+    const win = new WindowCreator
+    win.newText(text)
+    renderWindow("Message",win.body,300,300)
+}
+
+var focused = null
+
 export function renderWindow(title, bodyy, width, height) {
     var windw = document.createElement("div");
     windw.className = "window";
     windw.style.display = "flex";
     windw.style.flexDirection = "column";
+    focused = windw
 
     // Title bar
     var titlebar = document.createElement("div");
@@ -150,6 +163,24 @@ export function renderWindow(title, bodyy, width, height) {
     windw.style.border = "2px solid black"
     dragElement(windw,titlebar)
     addMiniDIV(windw);
+    windw.onclick = function(){
+        focused = windw
+    }
+    windw.ondrag = function(){
+        focused = windw
+    }
+    windw.onmousedown = function(){
+        focused = windw
+    }
+    setInterval(function(){
+        if (focused != windw) {
+            windw.style.zIndex = -10
+            titlebar.className = "unfocused"
+        } else {
+            windw.style.zIndex = 30
+            titlebar.className = "titlebar"
+        }
+    },100)
 }
 export function renderBackground(url) {
     const bg = document.createElement("img");
@@ -163,6 +194,7 @@ export function renderBackground(url) {
     bg.style.objectFit = "fill"; // now this works
     bg.style.zIndex = "-1234567890";
     bg.style.pointerEvents = "none";
+    bg.draggable = false
 
     document.body.style.margin = "0";
     document.body.appendChild(bg);

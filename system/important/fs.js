@@ -2,7 +2,7 @@
 // FS ROOT
 // ------------------------------
 function freshFS() {
-    return { "/": {"CenturyFS":"9.3","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+    return { "/": {"CenturyFS":"9.7","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
     bodyDiv.newText("Or is it?","")
@@ -537,5 +537,39 @@ console.log("fs.js loaded");
 console.log("fs.js is currently reloading or creating Windows CY disk...");
 
 fs = await loadFS(); // IMPORTANT FIX
+import { WindowCreator,renderWindow,betterAlert } from "/system/ui/ui.js";
+function safemode() {
+    // Create Recovery Mode window
+    const win = new WindowCreator
+    win.newText("The FS has not been detected and as a result of this, fs.js has decided to enter FScovery Mode. fs.js has given you these options to repair your filesystem, including reinstalling the OS.")
+    win.newButton("Reinstall Windows Century",function(){reinstall();betterAlert("Reinstallation Complete.")})
+    win.newButton("Restore from Backup",async function(){var input = document.createElement("input");
+        input.type = "file";
+        input.onchange = async () => {
+            await importFS(input.files[0]);
+            console.log("Restored!");
+            betterAlert("Restoration Complete.")
+        };
+        input.click();
+    })
+    win.newButton("Exit",function(){location.reload();win.remove();})
+    renderWindow("Recovery Mode",win.output,innerWidth,innerHeight)
+}
 
-console.log("fs.js version",readFile("/","CenturyFS"))
+try {
+    listDir("/")
+    readFile("/","bgtype")
+    newFile("/","test")
+    removeFile("/","test")
+} catch {
+    console.log("FS NOT FOUND OR IS EMPTY!")
+    console.log("Entering FScovery mode...")
+    safemode()
+}
+
+try {
+    console.log("fs.js version",readFile("/","CenturyFS"))
+} catch (error) {
+    console.log("CenturyFS version not found")
+}
+
