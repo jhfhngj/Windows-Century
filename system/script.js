@@ -111,6 +111,17 @@ function safemode() {
     win.newButton("Exit",function(){location.reload()})
     renderWindow("Recovery Mode",win.output,innerWidth,innerHeight)
 }
+var spinny = document.createElement("img")
+spinny.src = "/w97.png"
+spinny.style.position = "absolute"
+spinny.style.top = "50%"
+spinny.style.left = "50%"
+spinny.style.width = "480px"
+spinny.style.height = "480px"
+spinny.style.transform = "translate(-50%, -50%)"
+spinny.style.zIndex = "9999999999999999999999912334567890"
+document.body.appendChild(spinny)
+var currotate = 0
 loadScript("/system/sounds/chord.js")
 function tick(inputFunction) {
     if (e && e.altKey && e.key.toLowerCase() === "p") {
@@ -120,6 +131,10 @@ function tick(inputFunction) {
         chord.play();
         return safemode()
     }
+    currotate += 2
+    currotate = currotate % 360
+    spinny.style.transform = 'translate(-50%, -50%) rotate(' + currotate + 'deg)';
+    spinny.setAttribute('data-angle', currotate);
     var does = []
     current = nextPrintable(current, function(url){does.push(url)});
     console.log(current);
@@ -139,6 +154,7 @@ function tick(inputFunction) {
         load1.remove()
         pb95.remove()
         notificate.remove()
+        spinny.remove()
         finished = true
         console.clear()
         inputFunction()
