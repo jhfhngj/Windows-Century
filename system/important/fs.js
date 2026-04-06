@@ -464,8 +464,7 @@ win.newButton("Install!", function () {
 });
 
 renderWindow("Century Packages", win.output, 400, 300);
-`,"Settings.js":`import { readFile } from "../important/fs";
-import { newFile } from "/system/important/fs.js";
+`,"Settings.js":`import { newFile, readFile } from "/system/important/fs.js";
 import { WindowCreator,renderWindow,betterPrompt } from "/system/ui/ui.js";
 const win = new WindowCreator
 function loadScript(code, callback) {
@@ -495,6 +494,11 @@ win.newButton("Set wallpaper",function(){
     loadScript(readFile("/apps/","Wallpaper Setter.js"))
 })
 renderWindow("Settings",win.output,400,300)
+`,"CodeEdit.js":`import { renderWindow, WindowCreator } from "/system/ui/ui.js";
+
+const win = new WindowCreator
+win.newWebCode("python")
+renderWindow("CodeEdit",win.output,500,500)
 `}} };
 }
 

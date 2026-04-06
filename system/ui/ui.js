@@ -1,3 +1,4 @@
+import { WebCode } from "/system/libs/webcode.js"
 function addMiniDIV(minidiv) {
     document.body.appendChild(minidiv);
 }
@@ -57,7 +58,7 @@ export class WindowCreator
         this.body.appendChild(ipt)
         return ipt
     }
-    newTextArea(id){
+    newTextArea(id) {
         var ta = document.createElement("textarea")
         ta.id=id
         this.body.appendChild(ta)
@@ -69,6 +70,12 @@ export class WindowCreator
     newSplit(){
         var sp = document.createElement("hr")
         this.body.appendChild(sp)
+        return sp
+    }
+    newWebCode(language,id){
+        var sp = new WebCode(language)
+        sp.id = id
+        this.body.appendChild(sp.element)
         return sp
     }
 }

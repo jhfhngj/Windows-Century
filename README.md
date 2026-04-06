@@ -69,6 +69,7 @@ Windows Century includes several basic apps:
 - **Notes 2.0** — Thought I wouldn't update Notes? WRONG! This is an updated version, after updating the internals to match the things normal users and developers need.
 - **Century Packages** — Install stuff 'n' apps from a repo you define!
 - **Settings** — Change settings with ease.
+- **CodeEdit** — Very simple syntax highlighter.
 
 Apps live under `/apps/` inside the virtual filesystem.
 

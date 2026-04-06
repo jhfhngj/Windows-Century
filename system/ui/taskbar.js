@@ -64,6 +64,26 @@ function loadScript(code, callback) {
     }
 }
 
+function loadPyScript(code, callback) {
+    try {
+        const script = document.createElement('script');
+        script.textContent = code;
+        script.type = 'py'; // does this hurt no
+        script.setAttribute("config","/conf.json")
+        script.onload = () => {
+            console.log(`Script loaded: ${code}`);
+            if (typeof callback === 'function') callback(code);
+        };
+        script.onerror = () => {
+            console.error(`Failed to load script: ${code}`);
+        };
+        document.head.appendChild(script);
+    } catch (err) {
+        console.error("Error loading script:", err);
+    }
+}
+
+
 var menu = document.createElement("div")
 for (const [filename, code] of listDir("/apps/")) {
     const button = document.createElement("button")
@@ -89,12 +109,20 @@ var menuOpen = false
     // Menu refresh
     menu.replaceChildren()
     for (const [filename, code] of listDir("/apps/")) {
-    const button = document.createElement("button")
-    button.className = "win95-button"
-    button.textContent = filename.replace(".js", "")
-    button.onclick = function(){loadScript(code)}
-    menu.appendChild(button)
+    if (filename.endsWith(".js")){
+        const button = document.createElement("button")
+        button.className = "win95-button"
+        button.textContent = filename.replace(".js", "")
+        button.onclick = function(){loadScript(code)}
+        menu.appendChild(button)
+    } else if (filename.endsWith(".ps")) {
+        const button = document.createElement("button")
+        button.className = "win95-button"
+        button.textContent = filename.replace(".ps", "")
+        button.onclick = function(){loadPyScript(code)}
+        menu.appendChild(button)
     }
+}
     menuOpen = !menuOpen
     if (menuOpen) {
         // Show menu

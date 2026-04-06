@@ -1,8 +1,9 @@
 .window {
     position: absolute;
     background: #c0c0c0;
-    border: 2px solid black;
     box-shadow: 2px 2px 0px #000;
+    border-color: #fff #404040 #404040 #fff;
+    border-style: solid;
 }
 
 .titlebar {
@@ -92,4 +93,20 @@ img {
 
 body {
     overflow: hidden;
+}
+
+.webcode-editor * {
+    font-family: monospace;
+}
+
+.kw {
+    color: rgb(227, 227, 0); /* or whatever color you want */
+}
+
+.str {
+    color: rgb(4, 119, 0)
+}
+
+.num {
+    color: rgb(128, 255, 155)
 }
