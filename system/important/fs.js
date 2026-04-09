@@ -499,7 +499,17 @@ renderWindow("Settings",win.output,400,300)
 const win = new WindowCreator
 win.newWebCode("python")
 renderWindow("CodeEdit",win.output,500,500)
-`}} };
+`,"CTerm.js":`import { renderWindow, WindowCreator } from "/system/ui/ui.js"
+const win = new WindowCreator
+var a = win.newTextArea()
+a.style.width = 490
+a.style.height = 500
+var inp = win.newInput()
+const log = function(toPrint){
+    a.value = a.value + toPrint.toString() + "\\n"
+}
+win.newButton("Determine", function(){a.value += eval(inp.value).toString() + "\\n"})
+renderWindow("CTerm",win.output,500,600)`}} };
 }
 
 let fs; // will be loaded asynchronously

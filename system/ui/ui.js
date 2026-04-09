@@ -4,8 +4,7 @@ function addMiniDIV(minidiv) {
 }
 export class WindowCreator
 {
-    constructor(title) {
-        this.title = title
+    constructor() {
         this.body = document.createElement("div")
     }
     newImage(url,id){
