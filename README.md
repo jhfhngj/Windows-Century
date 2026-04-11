@@ -1,5 +1,5 @@
 # 🌐 **Windows Century**
-A browser‑native operating system simulation with a persistent virtual filesystem, modular apps, and a retro‑inspired windowing environment — all running client‑side.
+A browser‑native operating system simulation with a persistent virtual filesystem, modular apps, and a retro‑inspired window manager — all running client‑side.
 
 <p align="center">
   <img src="w97.png" alt="Windows Century logo — looks like Windows 3.1’s logo, but the panes are replaced with a peanut‑butter‑sandwich / Tac Nyan pop‑tart filling." width="256" style="image-rendering: pixelated">
