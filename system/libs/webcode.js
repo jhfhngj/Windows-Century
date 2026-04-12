@@ -1,11 +1,25 @@
+const kwrds = [
+    "break","case","catch","class","const","continue","debugger","default",
+    "delete","do","else","export","extends","finally","for","function","if",
+    "import","in","instanceof","let","new","return","super","switch","this",
+    "throw","try","typeof","var","void","while","with","yield"
+];
 let pyre = null;
+let curre = null;
 let stringre = /(['"])(?:\\.|(?!\1).)*\1/g;
 let numre = /-?[0-9]+(\.[0-9]+)?([eE][+-]?[0-9]+)?/g;
+let languages = ["python"]
 
 // Load highlight regex (your giant keyword regex)
 fetch("/highlight.re")
     .then(res => res.text())
     .then(text => pyre = new RegExp(text.trim(), "g"));
+
+let a = Object.getOwnPropertyNames(window)
+
+var jra = a.join("|")
+var jwd = kwrds.join("|")
+let jre = new RegExp("("+jra+"|"+jwd+")","g")
 
 function setCaretToEnd(el) {
     const range = document.createRange();
@@ -60,17 +74,20 @@ export class WebCode {
     }
 
     renderHighlight(text) {
-        if (this.language !== "python" || !pyre) {
+        if (!languages.includes(this.language)) {
             this.element.textContent = text;
             return;
         }
 
         const frag = document.createDocumentFragment();
         let index = 0;
+        if (this.language == "python") {curre = pyre}
+        else if (this.language == "javascript") {curre = jre}
+        else {curre = pyre}
 
         // Combined regex for strings, numbers, and your highlight.re
         const combined = new RegExp(
-            `${stringre.source}|${numre.source}|${pyre.source}`,
+            `${stringre.source}|${numre.source}|${curre.source}`,
             "g"
         );
 
