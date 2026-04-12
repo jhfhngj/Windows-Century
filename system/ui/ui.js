@@ -77,6 +77,12 @@ export class WindowCreator
         this.body.appendChild(sp.element)
         return sp
     }
+    newCanvas(id){
+        var sp = document.createElement("canvas")
+        sp.id = id
+        this.body.appendChild(sp)
+        return sp
+    }
 }
 
 function dragElement(elmnt,elmnt2) {

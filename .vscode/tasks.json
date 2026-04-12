@@ -6,7 +6,8 @@
         {
             "label": "Start server",
             "type": "shell",
-            "command": "py -m http.server"
+            "command": "py -m http.server",
+            "group": "build"
         }
     ]
 }

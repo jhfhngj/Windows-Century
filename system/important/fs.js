@@ -69,7 +69,7 @@ myWin.newButton("Save", function () {
 }, "btn");
 
 renderWindow("Notes", myWin.output, 400, 300);
-`,"TextRead":`import { WindowCreator, renderWindow } from "/system/ui/ui.js";
+`,"TextRead.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js";
 import { readFile } from "/system/important/fs.js";
 
 let myWin = new WindowCreator();
@@ -509,7 +509,141 @@ const log = function(toPrint){
     a.value = a.value + toPrint.toString() + "\\n"
 }
 win.newButton("Determine", function(){a.value += eval(inp.value).toString() + "\\n"})
-renderWindow("CTerm",win.output,500,600)`}} };
+renderWindow("CTerm",win.output,500,600)`,"MusicListen.js":`import { readFile, splitFilenamePath } from "/system/important/fs.js";
+import { renderWindow, WindowCreator } from "/system/ui/ui.js";
+
+const win = new WindowCreator
+win.newText("Music Player\nEnter path below")
+
+const input = win.newInput()
+const canvas = win.newCanvas()
+
+win.newButton("Play", function() {
+
+    const path = input.value
+    const [file, folder] = splitFilenamePath(path)
+
+    const audio = document.createElement("audio")
+    audio.src = "data:audio/mp3;base64,"+readFile(file, folder)
+    document.body.appendChild(audio)
+
+    const ctx = canvas.getContext("2d")
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+    const analyser = audioCtx.createAnalyser()
+    const source = audioCtx.createMediaElementSource(audio)
+
+    source.connect(analyser)
+    analyser.connect(audioCtx.destination)
+
+    analyser.fftSize = 256
+    const bufferLength = analyser.frequencyBinCount
+    const dataArray = new Uint8Array(bufferLength)
+
+    function draw() {
+        requestAnimationFrame(draw)
+        analyser.getByteFrequencyData(dataArray)
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+        const barWidth = (canvas.width / bufferLength) * 2.5
+        let x = 0
+
+        for (let i = 0; i < bufferLength; i++) {
+            const barHeight = dataArray[i]
+            ctx.fillStyle = \`rgb(\${barHeight + 100}, 50, 150)\`
+            ctx.fillRect(x, canvas.height - barHeight / 2, barWidth, barHeight / 2)
+            x += barWidth + 1
+        }
+    }
+
+    audio.play().then(() => {
+        audioCtx.resume()
+        draw()
+    })
+})
+
+renderWindow("MusicListen", win.output, 500, 500)
+`,"DownloadTool.js":`import { newFile, readFile, splitFilenamePath } from "/system/important/fs.js";
+import { WindowCreator, renderWindow, betterAlert } from "/system/ui/ui.js";
+import { URLer } from "/system/important/fsurl.js"; // your fs:// handler
+
+// ------------------------------
+// BASE64 ENCODER FOR BINARY
+// ------------------------------
+function arrayBufferToBase64(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = "";
+    for (let i = 0; i < bytes.length; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+}
+
+// ------------------------------
+// MAIN DOWNLOADER LOGIC
+// ------------------------------
+async function downloadToCenturyFS(url, savePath, saveName) {
+    try {
+        let resolvedURL = URLer(url);
+
+        // If URLer returned a regular http(s) URL, wrap with CORS proxy
+        if (resolvedURL.startsWith("http://") || resolvedURL.startsWith("https://")) {
+            resolvedURL = \`https://cors.eu.org/\${resolvedURL}\`;
+        }
+
+        const res = await fetch(resolvedURL);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+
+        const type = res.headers.get("content-type") || "";
+        let contents;
+
+        if (type.startsWith("text/") || type.includes("json") || type.includes("xml")) {
+            contents = await res.text();
+        } else {
+            const buf = await res.arrayBuffer();
+            contents = arrayBufferToBase64(buf);
+        }
+
+        newFile(savePath, saveName, contents);
+        betterAlert("Download complete and saved to CenturyFS.");
+    } catch (err) {
+        betterAlert("Download failed: " + err.message);
+    }
+}
+
+// ------------------------------
+// GUI APP
+// ------------------------------
+if (true) {
+    const win = new WindowCreator();
+
+    win.newText("Century Downloader\nEnter a URL and choose where to save.");
+
+    const urlInput = win.newInput();
+    urlInput.placeholder = "https://example.com/file.mp3 or fs://folder/file";
+
+    const pathInput = win.newInput();
+    pathInput.placeholder = "Save path (e.g. /downloads)";
+
+    const nameInput = win.newInput();
+    nameInput.placeholder = "Save as (e.g. song.mp3)";
+
+    win.newButton("Download", async function () {
+        const url = urlInput.value.trim();
+        const savePath = pathInput.value.trim();
+        const saveName = nameInput.value.trim();
+
+        if (!url || !savePath || !saveName) {
+            betterAlert("Please fill all fields.");
+            return;
+        }
+
+        await downloadToCenturyFS(url, savePath, saveName);
+    });
+
+    renderWindow("Century Downloader", win.output, 450, 300);
+}
+`}} };
 }
 
 let fs; // will be loaded asynchronously

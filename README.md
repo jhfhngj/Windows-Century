@@ -70,6 +70,7 @@ Windows Century includes several basic apps:
 - **Century Packages** — Install stuff 'n' apps from a repo you define!
 - **Settings** — Change settings with ease.
 - **CodeEdit** — Very simple syntax highlighter.
+- **DownloadTool** — Want a highly specific file but no single Century Packages repo has it? Go for the internet and download it using DownloadTool!
 
 Apps live under `/apps/` inside the virtual filesystem.
 
