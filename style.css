@@ -1,9 +1,18 @@
+@font-face {
+    font-family: 'W95FA';
+    src: url('/system/fonts/w95fa/w95f.woff2') format('woff2'),
+    url('/system/fonts/w95fa/w95f.woff') format('woff'),
+    url('/system/fonts/w95fa/W95F.otf') format('opentype');
+}
+
 .window {
     position: absolute;
     background: #c0c0c0;
     box-shadow: 2px 2px 0px #000;
     border-color: #fff #404040 #404040 #fff;
     border-style: solid;
+    resize: both;
+    overflow:auto;
 }
 
 .titlebar {
@@ -22,6 +31,8 @@
     font-weight: bold;
     cursor: move;
     user-select: none;
+    overflow:auto;
+    resize: both;
 }
 
 button {
@@ -88,7 +99,7 @@ img {
 }
 
 * {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "W95FA", Arial, Helvetica, "Ubuntu", monospace, 'Segoe UI', Tahoma, "Geneva", Verdana, sans-serif;
 }
 
 body {

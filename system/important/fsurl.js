@@ -14,7 +14,7 @@ export function URLer(url) {
         return URL.createObjectURL(blob);
     }
 
-    if (url.startsWith("http") || url.startsWith("https") || url.startsWith("/")) {
+    if (url.startsWith("http") || url.startsWith("https") || url.startsWith("/") || url.startsWith("localhost")) {
         return url;
     }
 

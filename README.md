@@ -71,6 +71,8 @@ Windows Century includes several basic apps:
 - **Settings** — Change settings with ease.
 - **CodeEdit** — Very simple syntax highlighter.
 - **DownloadTool** — Want a highly specific file but no single Century Packages repo has it? Go for the internet and download it using DownloadTool!
+- **MusicListen** — Vibe with the groove simply.
+- **MarkThatDown** — Eat up some Markdown and spit it out as HTML.
 
 Apps live under `/apps/` inside the virtual filesystem.
 

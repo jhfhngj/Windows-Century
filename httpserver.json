@@ -1,4 +1,6 @@
-import { WindowCreator, betterAlert, renderWindow } from "/system/ui/ui.js"
+{
+  "installTo":"/apps/HTTP Server.js",
+  "contents":"import { WindowCreator, betterAlert, renderWindow } from "/system/ui/ui.js"
 import { readFile, splitFilenamePath } from "/system/important/fs.js"
 
 const win = new WindowCreator
@@ -44,3 +46,5 @@ win.newButton("Start!", function () {
 })
 
 renderWindow("HTTP Server", win.output, 400, 600)
+"
+}

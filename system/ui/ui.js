@@ -146,12 +146,22 @@ export function betterPrompt(text, callback) {
 
 var focused = null
 
-export function renderWindow(title, bodyy, width, height) {
+export function renderWindow(title, bodyy, width, height, icon) {
     var windw = document.createElement("div");
     windw.className = "window";
     windw.style.display = "flex";
     windw.style.flexDirection = "column";
     focused = windw
+
+    // Actual titlebar
+    var bar = document.createElement("div")
+    if (icon) {
+        var toPut = document.createElement("img")
+        toPut.src = URLer(icon)
+        toPut.width = 32
+        toPut.height = 32
+        bar.appendChild(toPut)
+    }
 
     // Title bar
     var titlebar = document.createElement("div");
@@ -176,7 +186,8 @@ export function renderWindow(title, bodyy, width, height) {
 
     titlebar.appendChild(titleEl);
     titlebar.appendChild(remSelf);
-    windw.appendChild(titlebar);
+    bar.appendChild(titlebar)
+    windw.appendChild(bar);
 
     // Body content
     bodyy.style.flex = "1";          // <-- THIS makes the body fill the window

@@ -2,7 +2,18 @@
 // FS ROOT
 // ------------------------------
 function freshFS() {
-    return { "/": {"CenturyFS":"10.0","repo":"https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+    return { "/": {"ThirdPartyLicenses.md":`# Third‑Party Components
+
+## W95FA Font
+© The W95FA Authors  
+Licensed under the SIL Open Font License 1.1  
+The original license file is included as provided by the author.
+
+## Marked Markdown Parser
+© The Marked Project Authors  
+Licensed under the MIT License  
+The original license file is included as provided by the author.
+`,"CenturyFS":"10.0","repo":"https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
     bodyDiv.newText("Or is it?","")
@@ -643,6 +654,19 @@ if (true) {
 
     renderWindow("Century Downloader", win.output, 450, 300);
 }
+`,"MarkThatDown.js":`import { readFile, splitFilenamePath } from "/system/important/fs.js";
+import { WindowCreator,renderWindow } from "/system/ui/ui.js";
+import { marked } from "/system/libs/marked.esm.js"
+
+const win = new WindowCreator
+win.newText("MarkThatDown (Uses Marked)")
+win.newText("To open")
+const a=win.newInput()
+win.newButton("Open!",function(){
+    ca.innerHTML = marked.parse(readFile(splitFilenamePath(a.value)[1],splitFilenamePath(a.value)[0]))
+})
+const ca = win.newDiv()
+renderWindow("MarkThatDown (Uses Marked)",win.output,400,300)
 `}} };
 }
 
