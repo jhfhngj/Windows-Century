@@ -1,0 +1,46 @@
+import { WindowCreator, betterAlert, renderWindow } from "/system/ui/ui.js"
+import { readFile, splitFilenamePath } from "/system/important/fs.js"
+
+const win = new WindowCreator
+win.newText("Welcome to this HTTP server's interface!")
+win.newSplit()
+win.newText("Prerequisites: The server software.")
+
+const downloadButton = document.createElement("a")
+downloadButton.href = "/server.py"
+downloadButton.download = "/server.py"
+downloadButton.textContent = "Download such software."
+win.body.appendChild(downloadButton)
+
+win.newSplit()
+win.newText("How to use?")
+win.newText("Just run the server, specify your file (it needs to be just one file and only plaintext no Unicode you need to contain your CSS and JS in the HTML), then hit the button!")
+win.newSplit()
+
+win.newText("Path to file?")
+const a = win.newInput()
+win.newSplit()
+
+win.newButton("Start!", function () {
+    const file = a.value
+    const [path, filename] = splitFilenamePath(file)
+    const data = readFile(filename, path)
+
+    const socket = new WebSocket("ws://localhost:8765")
+
+    socket.addEventListener("open", () => {
+        console.log("Connection opened")
+        socket.send(data)
+    })
+
+    socket.addEventListener("message", (event) => {
+        console.log("Message from server:", event.data)
+        if (event.data == "start") {
+            betterAlert("Server started! Visit localhost:2080 or localhost.")
+        } else {
+            betterAlert(event.data)
+        }
+    })
+})
+
+renderWindow("HTTP Server", win.output, 400, 600)
