@@ -1,19 +1,19 @@
 // ------------------------------
 // FS ROOT
 // ------------------------------
-function freshFS() {
-    return { "/": {"ThirdPartyLicenses.md":`# Third‑Party Components
-
-## W95FA Font
-© The W95FA Authors  
-Licensed under the SIL Open Font License 1.1  
-The original license file is included as provided by the author.
-
-## Marked Markdown Parser
-© The Marked Project Authors  
-Licensed under the MIT License  
-The original license file is included as provided by the author.
-`,"CenturyFS":"10.0","repo":"https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+//function freshFS() {
+    return { "/": {"ThirdPartyLicenses.md":`# Third‑Party Components\
+\
+## W95FA Font\
+© The W95FA Authors  \
+Licensed under the SIL Open Font License 1.1  \
+The original license file is included as provided by the author.\
+\
+## Marked Markdown Parser\
+© The Marked Project Authors  \
+Licensed under the MIT License  \
+The original license file is included as provided by the author.\
+`,"CenturyFS":"11.0","repo":"https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
     bodyDiv.newText("Or is it?","")
@@ -668,166 +668,276 @@ win.newButton("Open!",function(){
 const ca = win.newDiv()
 renderWindow("MarkThatDown (Uses Marked)",win.output,400,300)
 `}} };
-}
 
-let fs; // will be loaded asynchronously
+// CenturyFS 11.0
+// - Real OPFS filesystem
+// - Backward compatible with <=10.0 w97.json
+// - Same function names: freshFS, loadFS, saveFS, newFile, readFile, reinstall
+
+const META_FILE = ".centuryfs.json";
+const LEGACY_FILE = "w97.json";
 
 // ------------------------------
-// SAVE / LOAD
+// Old-style freshFS (JSON structure)
 // ------------------------------
-async function saveFS(fsb) {
-    if (fsb) {
-        const root = await navigator.storage.getDirectory();
-        const file = await root.getFileHandle("w97.json", { create: true });
-        const writable = await file.createWritable();
-        await writable.write(JSON.stringify(fsb));
-        await writable.close();
-    } else {
-        const root = await navigator.storage.getDirectory();
-        const file = await root.getFileHandle("w97.json", { create: true });
-        const writable = await file.createWritable();
-        await writable.write(JSON.stringify(fs));
-        await writable.close();
-    }
+export function freshFS() {
+    return {
+        "/": {
+            "apps": {
+                "sb.js": `import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+var bodyDiv = new WindowCreator
+bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
+bodyDiv.newText("Or is it?","")
+bodyDiv.newImage("https://th.bing.com/th/id/OIP._2K-QIG2KFVN-e8SFeVbdQHaE8?w=234&h=180&c=7&r=0&o=7&pid=1.7&rm=3","image2")
+bodyDiv.newFrame("https://th.bing.com/th/id/OIP._2K-QIG2KFVN-e8SFeVbdQHaE8?w=234&h=180&c=7&r=0&o=7&pid=1.7&rm=3","image")
+bodyDiv = bodyDiv.output
+
+renderWindow("More beautiful images", bodyDiv, 400, 600);`,
+                "ImageView.js": `import { WindowCreator, renderWindow } from "/system/ui/ui.js";
+
+var win = new WindowCreator();
+
+// Label
+win.newText("Enter image URL:", "img-label");
+
+// Input box
+win.newInput("img-url");
+
+// Load button
+win.newButton("Load", function () {
+    const url = document.getElementById("img-url").value.trim();
+    if (!url) return;
+
+    const old = document.getElementById("img-viewer-img");
+    if (old) old.remove();
+
+    win.newImage(url, "img-viewer-img");
+});
+
+renderWindow("Image Viewer", win.output, 400, 350);
+`,
+                "Reset this PC.js": `import { WindowCreator, renderWindow } from "/system/ui/ui.js";
+import { reinstall } from "/system/important/fs.js";
+
+var win = new WindowCreator();
+
+win.newText(
+    "This will erase all apps, files, and settings in Windows97.\\nYour system will reboot after reset."
+);
+
+win.newButton("Reset Windows97", async function () {
+    await reinstall();     // wipe FS + reinstall fresh
+    location.reload();     // simulate reboot
+});
+
+renderWindow("Reset this PC", win.output, 360, 180);
+`
+            }
+        }
+    };
 }
 
-async function loadFS() {
-    const root = await navigator.storage.getDirectory();
+// ------------------------------
+// Core OPFS helpers
+// ------------------------------
+async function getRoot() {
+    return await navigator.storage.getDirectory();
+}
+
+async function loadMeta() {
+    const root = await getRoot();
     try {
-        const file = await root.getFileHandle("w97.json");
+        const file = await root.getFileHandle(META_FILE);
         const blob = await file.getFile();
         return JSON.parse(await blob.text());
     } catch {
-        return freshFS();
+        // No meta yet → assume legacy
+        return { version: 10 };
     }
 }
 
-// ------------------------------
-// PATH RESOLVER
-// ------------------------------
-function resolvePath(path) {
-    const parts = path.split("/").filter(Boolean);
-    let node = fs["/"]; // IMPORTANT FIX
+async function saveMeta(meta) {
+    const root = await getRoot();
+    const file = await root.getFileHandle(META_FILE, { create: true });
+    const w = await file.createWritable();
+    await w.write(JSON.stringify(meta));
+    await w.close();
+}
 
+function splitPath(fullPath) {
+    const parts = fullPath.split("/").filter(Boolean);
+    const name = parts.pop() || "";
+    const dirPath = "/" + parts.join("/");
+    return { dirPath, name };
+}
+
+async function opfsGetDir(path) {
+    const root = await getRoot();
+    const parts = path.split("/").filter(Boolean);
+    let dir = root;
     for (const part of parts) {
-        if (!node[part]) node[part] = {};
-        node = node[part];
+        dir = await dir.getDirectoryHandle(part, { create: true });
+    }
+    return dir;
+}
+
+async function opfsWriteFile(fullPath, contents) {
+    const { dirPath, name } = splitPath(fullPath);
+    const dir = await opfsGetDir(dirPath);
+    const file = await dir.getFileHandle(name, { create: true });
+    const w = await file.createWritable();
+    await w.write(contents);
+    await w.close();
+}
+
+async function opfsReadFile(fullPath) {
+    const { dirPath, name } = splitPath(fullPath);
+    const dir = await opfsGetDir(dirPath);
+    const file = await dir.getFileHandle(name);
+    const blob = await file.getFile();
+    return await blob.text(); // swap to arrayBuffer() for binary
+}
+
+// ------------------------------
+// Walk old JSON FS → OPFS
+// ------------------------------
+// node: object tree from freshFS / legacy w97.json
+// currentPath: string like "/" or "/apps"
+async function walkLegacyNode(node, currentPath) {
+    if (!node || typeof node !== "object") return;
+
+    for (const [key, value] of Object.entries(node)) {
+        const nextPath = currentPath === "/" ? `/${key}` : `${currentPath}/${key}`;
+
+        if (typeof value === "string") {
+            await opfsWriteFile(nextPath, value);
+        } else if (value && typeof value === "object") {
+            await walkLegacyNode(value, nextPath);
+        }
+    }
+}
+
+// ------------------------------
+// Migration from <=10.0 w97.json
+// ------------------------------
+async function migrateFrom10() {
+    const root = await getRoot();
+    try {
+        const file = await root.getFileHandle(LEGACY_FILE);
+        const blob = await file.getFile();
+        const legacyFS = JSON.parse(await blob.text());
+
+        if (legacyFS && typeof legacyFS === "object") {
+            for (const [topKey, node] of Object.entries(legacyFS)) {
+                if (topKey === "/") {
+                    await walkLegacyNode(node, "/");
+                } else if (node && typeof node === "object") {
+                    await walkLegacyNode(node, topKey);
+                }
+            }
+        }
+
+        await saveMeta({ version: 11 });
+        // optional: await root.removeEntry(LEGACY_FILE);
+    } catch {
+        // No legacy FS → create fresh from freshFS()
+        const fsObj = freshFS();
+        if (fsObj && typeof fsObj === "object") {
+            for (const [topKey, node] of Object.entries(fsObj)) {
+                if (topKey === "/") {
+                    await walkLegacyNode(node, "/");
+                } else if (node && typeof node === "object") {
+                    await walkLegacyNode(node, topKey);
+                }
+            }
+        }
+        await saveMeta({ version: 11 });
+    }
+}
+
+async function ensureFSReady() {
+    const meta = await loadMeta();
+    if (!meta.version || meta.version < 11) {
+        await migrateFrom10();
+    }
+}
+
+// ------------------------------
+// Public API (same names)
+// ------------------------------
+
+// <=10.0: returned JSON FS
+// 11.0: ensure OPFS is ready, return minimal descriptor
+export async function loadFS() {
+    await ensureFSReady();
+    return { version: 11 };
+}
+
+// <=10.0: wrote whole FS JSON to w97.json
+// 11.0: interpret fsb as map of paths -> contents (if used)
+export async function saveFS(fsb) {
+    await ensureFSReady();
+
+    if (!fsb || typeof fsb !== "object") return;
+
+    for (const [path, contents] of Object.entries(fsb)) {
+        if (typeof path === "string") {
+            await opfsWriteFile(path, contents);
+        }
+    }
+}
+
+// newFile compatibility:
+// - newFile(content, path)
+// - newFile(path, name, contents)
+export async function newFile(a, b, c) {
+    await ensureFSReady();
+
+    if (c !== undefined) {
+        const base = a.endsWith("/") ? a : a + "/";
+        const fullPath = base + b;
+        await opfsWriteFile(fullPath, c);
+    } else {
+        const content = a;
+        const path = b;
+        await opfsWriteFile(path, content);
+    }
+}
+
+export async function readFile(path) {
+    await ensureFSReady();
+    return await opfsReadFile(path);
+}
+
+// ------------------------------
+// reinstall: wipe OPFS, then reapply freshFS() via wrapper
+// ------------------------------
+export async function reinstall() {
+    const root = await getRoot();
+
+    // wipe everything except META_FILE (we'll overwrite meta anyway)
+    for await (const entry of root.values()) {
+        if (entry.kind === "file") {
+            if (entry.name === META_FILE) continue;
+            await root.removeEntry(entry.name);
+        } else if (entry.kind === "directory") {
+            await root.removeEntry(entry.name, { recursive: true });
+        }
     }
 
-    return node;
+    // Use freshFS() JSON and write it into OPFS
+    const fsObj = freshFS();
+    if (fsObj && typeof fsObj === "object") {
+        for (const [topKey, node] of Object.entries(fsObj)) {
+            if (topKey === "/") {
+                await walkLegacyNode(node, "/");
+            } else if (node && typeof node === "object") {
+                await walkLegacyNode(node, topKey);
+            }
+        }
+    }
+
+    await saveMeta({ version: 11 });
 }
 
-// ------------------------------
-// FILE OPERATIONS
-// ------------------------------
-export function newFile(path, name, contents) {
-    const dir = resolvePath(path);
-    dir[name] = contents;
-    saveFS();
-}
-
-export function readFile(path, name) {
-    const dir = resolvePath(path);
-    return dir[name];
-}
-
-export function removeFile(path, name) {
-    const dir = resolvePath(path);
-    delete dir[name];
-    saveFS();
-}
-
-export function copyFile(path1, name1, path2, name2) {
-    const dir1 = resolvePath(path1);
-    const dir2 = resolvePath(path2);
-    dir2[name2] = dir1[name1];
-    saveFS();
-}
-
-export function renameFile(path, name, newName) {
-    const dir = resolvePath(path);
-    dir[newName] = dir[name];
-    delete dir[name];
-    saveFS();
-}
-
-export async function reinstall() {
-    fs = freshFS();   // replace in-memory filesystem
-    await saveFS();   // save the new one to disk
-}
-
-// ------------------------------
-// DIRECTORY OPERATIONS
-// ------------------------------
-
-export function listDir(path) {
-    const dir = resolvePath(path)
-    return Object.entries(dir)
-}
-
-export function createDirTreeTo(path) {
-    resolvePath(path)
-}
-
-export function removeDir(path) {
-    const parts = path.split("/").filter(Boolean);
-    const name = parts.pop();
-    const parent = resolvePath("/" + parts.join("/"));
-    delete parent[name];
-    saveFS();
-}
-
-// ------------------------------
-// HELPER FUNCTIONS
-// ------------------------------
-
-export function splitFilenamePath(toSplit) {
-    var now = toSplit.split("/")
-    var file = now.pop()
-    var path = now.join("/")
-    return [file,path]
-}
-
-// ------------------------------
-// INITIALIZE FS
-// ------------------------------
-console.log("fs.js loaded");
-console.log("fs.js is currently reloading or creating Windows CY disk...");
-
-fs = await loadFS(); // IMPORTANT FIX
-import { WindowCreator,renderWindow,betterAlert } from "/system/ui/ui.js";
-function safemode() {
-    // Create Recovery Mode window
-    const win = new WindowCreator
-    win.newText("The FS has not been detected and as a result of this, fs.js has decided to enter FScovery Mode. fs.js has given you these options to repair your filesystem, including reinstalling the OS.")
-    win.newButton("Reinstall Windows Century",function(){reinstall();betterAlert("Reinstallation Complete.")})
-    win.newButton("Restore from Backup",async function(){var input = document.createElement("input");
-        input.type = "file";
-        input.onchange = async () => {
-            await importFS(input.files[0]);
-            console.log("Restored!");
-            betterAlert("Restoration Complete.")
-        };
-        input.click();
-    })
-    win.newButton("Exit",function(){location.reload();win.remove();})
-    renderWindow("Recovery Mode",win.output,innerWidth,innerHeight)
-}
-
-try {
-    listDir("/")
-    readFile("/","bgtype")
-    newFile("/","test")
-    removeFile("/","test")
-} catch {
-    console.log("FS NOT FOUND OR IS EMPTY!")
-    console.log("Entering FScovery mode...")
-    safemode()
-}
-
-try {
-    console.log("fs.js version",readFile("/","CenturyFS"))
-} catch (error) {
-    console.log("CenturyFS version not found")
-}
-
+fetch("CenturyFS 11.0")

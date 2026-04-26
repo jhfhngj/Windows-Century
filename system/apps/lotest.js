@@ -1,0 +1,1 @@
+var i=0;while(true){localStorage.setItem(i.toString(),i.toString());localStorage.setItem("max",i.toString());i++};var max=localStorage.getItem("max");localStorage.clear();console.log(max)

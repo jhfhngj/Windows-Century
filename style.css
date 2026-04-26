@@ -31,8 +31,6 @@
     font-weight: bold;
     cursor: move;
     user-select: none;
-    overflow:auto;
-    resize: both;
 }
 
 button {
@@ -98,7 +96,7 @@ img {
     image-rendering: pixelated;
 }
 
-* {
+html * {
     font-family: "W95FA", Arial, Helvetica, "Ubuntu", monospace, 'Segoe UI', Tahoma, "Geneva", Verdana, sans-serif;
 }
 
