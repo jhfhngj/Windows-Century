@@ -1,0 +1,401 @@
+#!/usr/bin/python3
+import os
+import sys
+import random
+import time
+import cmath
+import pickle
+
+trying = False
+def s(text: str):
+    return text.split("(")
+global rufc
+rufc = False
+var = {}
+var["pi"] = cmath.pi
+funcs = {}
+libs = []
+dirlibs = []
+lists = {}
+out = ""
+async def read(code):
+    global rufc
+    global trying
+    rufc = False
+    codeo = list(code)
+    code = []
+    for line in codeo:
+        code.append(line.strip())
+    out = ""
+    typel = ""
+    i = 0
+    while i < len(code):
+        line = str(code[i])
+        try:
+            end = code.index("end(", i)
+        except:
+            end = len(code)
+        if s(line)[0] == "prt":
+            full = ""
+            for thingie in s(line)[1].split():
+                if var.get(thingie) != None:
+                    full += str(var.get(thingie)) + " "
+                else:
+                    full += str(thingie) + " "
+            print(full)
+        elif s(line)[0] == "into":
+            do = await input()
+            var.update({str(s(line)[1]): do})
+        elif s(line)[0] == "get":
+            if os.path.exists(s(line)[1]):
+                if os.path.isdir(s(line)[1]):
+                    dirlibs.append(s(line)[1])
+                else:
+                    libs.append(s(line)[1])
+        elif s(line)[0] == "runlib":
+            if libs.count(s(line)[1]) > 0:
+                with open(s(line)[1]) as f:
+                    rd = []
+                    r = f.readlines()
+                    for line in r:
+                        rd.append(line.rstrip())
+                    read(rd)
+        elif s(line)[0] == "uselib":
+                if dirlibs.count(s(line)[1]) > 0:
+                    if os.path.exists(f"{s(line)[1]}/{s(line)[2]}"):
+                        with open(f"{s(line)[1]}/{s(line)[2]}") as f:
+                            r = f.readlines()
+                            rd = []
+                            for line in r:
+                                rd.append(line.rstrip())
+                            read(rd)
+        elif s(line)[0] == "if!=":
+            if var.get(s(line)[1]) == None:
+                v1 = "str"
+            else:
+                v1 = "var"
+            if var.get(s(line)[2]) == None:
+                v2 = "str"
+            else:
+                v2 = "var"
+            if v1 == "str" and v2 == "str":
+                if s(line)[1] != s(line)[2]:
+                    out = "True"
+                else:
+                    out = "False"
+            if v1 == "var" and v2 == "var":
+                if var.get(s(line)[1]) != var.get(s(line)[2]):
+                    out = "True"
+                else:
+                    out = "False"
+            if v1 == "str" and v2 == "var":
+                if s(line)[1] != var.get(s(line)[1]):
+                    out = "True"
+                else:
+                    out = "False"
+            if v1 == "var" and v2 == "str":
+                if var.get(s(line)[1]) != s(line)[2]:
+                    out = "True"
+                else:
+                    out = "False"
+            var.update({s(line)[3]: out})
+            if out == "False":
+                i = end
+        elif s(line)[0] == "if=":
+            if var.get(s(line)[1]) == None:
+                v1 = "str"
+            else:
+                v1 = "var"
+            if var.get(s(line)[2]) == None:
+                v2 = "str"
+            else:
+                v2 = "var"
+            if v1 == "str" and v2 == "str":
+                if s(line)[1] == s(line)[2]:
+                    out = "True"
+                else:
+                    out = "False"
+            if v1 == "var" and v2 == "var":
+                if var.get(s(line)[1]) == var.get(s(line)[2]):
+                    out = "True"
+                else:
+                    out = "False"
+            if v1 == "str" and v2 == "var":
+                if s(line)[1] == var.get(s(line)[1]):
+                    out = "True"
+                else:
+                    out = "False"
+            if v1 == "var" and v2 == "str":
+                if var.get(s(line)[1]) == s(line)[2]:
+                    out = "True"
+                else:
+                    out = "False"
+            var.update({s(line)[3]: out})
+            if out == "False":
+                i = end
+        elif s(line)[0] == "frvr":
+            start = i
+            typel = "loopf"
+        # elif s(line)[0] == "rpt":
+        #     start = i
+        #     typel = "loopr"
+        #     times = s(line)[1]
+        elif s(line)[0] == "brk":
+            typel = "brk"
+        elif s(line)[0] == "end":
+            end = i
+            if typel == 'loopf':
+                i = start
+                continue
+            if rufc == True:
+                i = gt + 1
+                rufc = False
+                continue
+            if typel == 'brk':
+                start = i+1
+                continue
+            if trying:
+                trying = False
+                continue
+            
+        elif s(line)[0] == "runpy":
+            os.system(f"python3 {s(line)[1]}")
+        elif line.startswith("##"):
+            pass
+        elif line == "" or line.lower() == "run":
+            pass
+        elif s(line)[0] == "func":
+            funcs[s(line)[1]] = (i, end)
+        elif s(line)[0] == "rfunc":
+            if funcs.get(s(line)[1]) != None:
+                gt = i
+                i = funcs.get(s(line)[1])[0] + 1
+                rufc = True
+            else:
+                print("No such function:",s(line)[1])
+        elif s(line)[0] == "vardef":
+            var[s(line)[1]] = s(line)[2]
+        elif s(line)[0] == "rvar":
+            try:
+                var.pop(s(line)[1])
+            except:
+                if not trying:
+                    print("KeydelError in line",str(line))
+                    quit(2)
+                else:
+                    pass
+        elif s(line)[0] == "rmfunc":
+            try:
+                funcs.pop(s(line)[1])
+            except:
+                if not trying:
+                    print("KeydelError in line",str(line))
+                    quit(2)
+        elif s(line)[0] == "quit":
+            print(s(line)[1])
+            quit(int(s(line)[2]))
+        elif s(line)[0] == "exit":
+            exit(0)
+        elif s(line)[0] == "add":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                op2 = var.get(s(line)[2], s(line)[2])
+                var[s(line)[3]] = str(float(op1) + float(op2))
+            except:
+                if not trying:
+                    print("BasicMathICanterror in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "sub":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                op2 = var.get(s(line)[2], s(line)[2])
+                var[s(line)[3]] = str(float(op1) - float(op2))
+            except:
+                if not trying:
+                    print("BasicMathICanterror in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "mul":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                op2 = var.get(s(line)[2], s(line)[2])
+                var[s(line)[3]] = str(float(op1) * float(op2))
+            except:
+                if not trying:
+                    print("BasicMathICanterror in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "div":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                op2 = var.get(s(line)[2], s(line)[2])
+                var[s(line)[3]] = str(float(op1) / float(op2))
+            except:
+                if not trying:
+                    print("BasicMathICanterror in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "pow":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                op2 = var.get(s(line)[2], s(line)[2])
+                var[s(line)[3]] = str(float(op1) ** float(op2))
+            except:
+                if not trying:
+                    print("ComplexMathICanterror in line", str(line))
+                    quit(2)
+                    print("What? You broke the laws of Pythonics with this one.")
+        elif s(line)[0] == "abs":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                var[s(line)[2]] = str(abs(float(op1)))
+            except:
+                if not trying:
+                    print("ComplexMathICanterror in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "min":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                op2 = var.get(s(line)[2], s(line)[2])
+                var[s(line)[3]] = str(min(float(op1), float(op2)))
+            except:
+                if not trying:
+                    print("ComplexMathICanterror in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "max":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                op2 = var.get(s(line)[2], s(line)[2])
+                var[s(line)[3]] = str(max(float(op1), float(op2)))
+            except:
+                if not trying:
+                    print("ComplexMathICanterror in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "rand":
+            try:
+                op1 = int(var.get(s(line)[1], s(line)[1]))
+                op2 = int(var.get(s(line)[2], s(line)[2]))
+                var[s(line)[3]] = str(random.randint(op1, op2))
+            except:
+                if not trying:
+                    print("RandomError in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "wait":
+            try:
+                op = var.get(s(line)[1], s(line)[1])
+                time.sleep(float(op))
+            except:
+                if not trying:
+                    print("TimeError in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "rprt":
+            print(s(line)[1:])
+        elif s(line)[0] == "try":
+            trying = True
+        elif s(line)[0] == "len":
+            try:
+                op = var.get(s(line)[1], s(line)[1])
+                var[s(line)[2]] = len(op)
+            except:
+                if not trying:
+                    print("LengthError in line:",str(line))
+                    quit(2)
+        elif s(line)[0] == "choice":
+            try:
+                op = var.get(s(line)[1], s(line)[1])
+                var[s(line)[2]] = random.choice(op)
+            except:
+                if not trying:
+                    print("RandomError in line:",str(line))
+                    quit(2)
+        elif s(line)[0] == "mli":
+            try:
+                # Make list
+                lists[s(line)[1]] = []
+            except:
+                if not trying:
+                    print("ListError in line:",str(line))
+                    quit(2)
+        elif s(line)[0] == "gli":
+            # Get from list and set to var
+            try:
+                var[s(line)[3]] = lists[s(line)[1]][int(s(line)[2])]
+            except:
+                if not trying:
+                    print("ListError in line:",str(line))
+                    quit(2)
+        elif s(line)[0] == "ali":
+            # Append to list
+            try:
+                lists[s(line)[1]].append(s(line)[2])
+            except:
+                if not trying:
+                    print("ListError in line:",str(line))
+                    quit(2)
+        elif s(line)[0] == "pli":
+            # Pop w/o index from list
+            try:
+                var[s(line)[2]] = lists[s(line)[1]].pop()
+            except:
+                if not trying:
+                    print("ListError in line:",str(line))
+                    quit(2)
+        elif s(line)[0] == "pil":
+            # Pop with index from list
+            try:
+                var[s(line)[2]] = lists[s(line)[1]].pop(s(line)[3])
+            except:
+                if not trying:
+                    print("ListError in line:",str(line))
+                    quit(2)
+        elif s(line)[0] == "mod":
+            try:
+                op1 = var.get(s(line)[1], s(line)[1])
+                op2 = var.get(s(line)[2], s(line)[2])
+                var[s(line)[3]] = str(float(op1) % float(op2))
+            except:
+                if not trying:
+                    print("NotSoBasicMathICanterror in line", str(line))
+                    quit(2)
+        elif s(line)[0] == "wtl":
+            try:
+                with open(str(var.get(s(line)[1])), "wb") as f:
+                    pickle.dump(s(line)[2],f)
+            except:
+                if not trying:
+                    print("FileError in line",str(line))
+                    quit(2)
+        elif s(line)[0] == "rfl":
+            try:
+                with open(str(var.get(s(line)[1])), "rb") as f:
+                    var[s(line)[2]] = pickle.load(f)
+            except Exception as e:
+                if not trying:
+                    print("FileError in line",str(line))
+                    quit(2)
+        else:
+            print("Err in line",str(i)+": Unsupported","'"+str(line)+"'")
+            quit(1)
+        i += 1
+        
+async def rfl(file):
+    rode = []
+    with open(file,"r") as f:
+        reads = f.readlines()
+    for one in reads:
+        one = one.rstrip()
+        rode.append(one)
+    await read(rode)
+async def main():
+    if len(sys.argv) > 1:
+        rfl(sys.argv[1])
+        await input("Press Enter to continue . . . ")
+    else:
+        b = []
+        print("Pur Interpreter 2.3 Shawarma Web on " + str(os.name))
+        while True:
+            a = await input(": ")
+            if a.lower() == "run":
+                await read(b)
+                a = ""
+                del a
+            else:
+                b.append(a)
+main()
