@@ -13,6 +13,11 @@ The original license file is included as provided by the author.
 © The Marked Project Authors  
 Licensed under the MIT License  
 The original license file is included as provided by the author.
+
+## Ruffle Flash Emulator
+© The Ruffle Authors  
+Licensed under the MIT License  
+The original license file is included as provided by the author.
 `,"CenturyFS":"10.0","repo":"https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
@@ -667,6 +672,57 @@ win.newButton("Open!",function(){
 })
 const ca = win.newDiv()
 renderWindow("MarkThatDown (Uses Marked)",win.output,400,300)
+`,"BinaryURL.js":`import { WindowCreator,renderWindow } from "/system/ui/ui.js";
+import {newFile, splitFilenamePath} from "/system/important/fs.js"
+const win = new WindowCreator
+win.newText("Set a URL to save as a 'binary' though actually plaintext file. BinaryURL supported apps can use this to use binary with strings.")
+const path = win.newInput()
+win.newText("Save path?")
+const sav = win.newInput()
+win.newButton("Save",function(){newFile(splitFilenamePath(sav.value)[1],splitFilenamePath(sav.value)[0],path.value)})
+renderWindow("BinaryURL",win.output,400,300)
+`,"Ruffle Player.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js";
+import { URLer } from "/system/important/fsurl.js";
+import { readFile, splitFilenamePath } from "/system/important/fs.js";
+
+const win = new WindowCreator();
+
+win.newText("The SWF? (Use web URLs, or fs:// for BinaryURL.)");
+const swf = win.newInput();
+// Button to load SWF
+win.newButton("Play", async function () {
+    let path = swf.value;
+    let url = URLer(path);
+
+    // If URLer returned a blob URL, we need to fetch the blob
+    if (url.startsWith("blob:")) {
+        const res = await fetch(url);
+        const buf = await res.arrayBuffer();
+        const blob = new Blob([buf], { type: "application/x-shockwave-flash" });
+        ruf.load(URL.createObjectURL(blob));
+        return;
+    }
+
+    // If it's a normal URL, let Ruffle fetch it
+    ruf.load(url);
+});
+
+// Create a container INSIDE the window
+const container = win.newDiv();
+container.id = "ruffle-container";
+
+// Render the window BEFORE creating the player
+renderWindow("Ruffle Player", win.output, 400, 300);
+
+// Now create the Ruffle player
+function createRufflePlayer(containerId) {
+    const ruffle = window.RufflePlayer.newest();
+    const player = ruffle.createPlayer();
+    document.getElementById(containerId).appendChild(player);
+    return player;
+}
+
+const ruf = createRufflePlayer("ruffle-container");
 `}} };
 }
 
