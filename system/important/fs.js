@@ -18,7 +18,7 @@ The original license file is included as provided by the author.
 © The Ruffle Authors  
 Licensed under the MIT License  
 The original license file is included as provided by the author.
-`,"CenturyFS":"10.0","repo":"https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
+`,"CenturyFS":"11.0","repo":"https://raw.githubusercontent.com/jhfhngj/Windows-Century-Packages/Mainly-Main/","bg":"/system/bg.png","bgtype":"system","firstboot":"1","apps":{"sb.js":`import { WindowCreator, renderWindow } from "/system/ui/ui.js"
     var bodyDiv = new WindowCreator
     bodyDiv.newButton("This image is not beautiful", function(){document.getElementById("image").remove();document.getElementById("image2").remove()},"doom")
     bodyDiv.newText("Or is it?","")
@@ -425,7 +425,7 @@ import { splitFilenamePath, newFile } from '/system/important/fs.js'
 
 var win = new WindowCreator
 
-var myCodeMirror = win.newTextArea()
+var myCodeMirror = win.newTextArea("notes")
 
 win.newText("File path?")
 var fp = win.newInput()
@@ -723,6 +723,54 @@ function createRufflePlayer(containerId) {
 }
 
 const ruf = createRufflePlayer("ruffle-container");
+`,"Cursor.js":`function createCursor() {
+    var cursor = document.createElement("img");
+    cursor.src = "/system/cool photos/cursor.png";
+    cursor.style.position = "absolute";
+    cursor.style.left = "0px";
+    cursor.style.top = "0px";
+
+    cursor.moveTo = function(element, callback) {
+        cursor.selected = element;
+        cursor.style.left = element.offsetLeft + "px";
+        cursor.style.top = element.offsetTop + "px";
+        if (callback) setTimeout(callback, 500);
+    };
+
+    cursor.click = function() {
+        if (cursor.selected) {
+            cursor.selected.click();
+        }
+    };
+
+    cursor.type = function(text) {
+        if (!cursor.selected) return;
+
+        if ("value" in cursor.selected) {
+            cursor.selected.value += text;
+        } else {
+            cursor.selected.textContent += text;
+        }
+    };
+
+    document.body.appendChild(cursor);
+    return cursor;
+}
+
+var cursor = createCursor();
+
+cursor.moveTo(document.getElementById("start-button"), function() {
+    cursor.click();
+
+    cursor.moveTo(document.getElementById("Notes 2.0.js"), function() {
+        cursor.click();
+
+        cursor.moveTo(document.getElementById("notes"), function() {
+            cursor.click();
+            cursor.type("THis is a CUrsor doing NOt a Single Job for you!");
+        });
+    });
+});
 `}} };
 }
 
