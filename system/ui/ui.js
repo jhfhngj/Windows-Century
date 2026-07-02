@@ -1,5 +1,5 @@
 import { WebCode } from "/system/libs/webcode.js"
-import { URLer } from "/system/important/fsurl";
+import { URLer } from "/system/important/fsurl.js";
 function addMiniDIV(minidiv) {
     document.body.appendChild(minidiv);
 }
@@ -156,12 +156,13 @@ export function renderWindow(title, bodyy, width, height, icon) {
 
     // Actual titlebar
     var bar = document.createElement("div")
+    var car = document.createElement("div")
     if (icon) {
         var toPut = document.createElement("img")
         toPut.src = URLer(icon)
         toPut.width = 32
         toPut.height = 32
-        bar.appendChild(toPut)
+        car.appendChild(toPut)
     }
 
     // Title bar
@@ -187,7 +188,8 @@ export function renderWindow(title, bodyy, width, height, icon) {
 
     titlebar.appendChild(titleEl);
     titlebar.appendChild(remSelf);
-    bar.appendChild(titlebar)
+    car.appendChild(titlebar)
+    bar.appendChild(car)
     windw.appendChild(bar);
 
     // Body content
