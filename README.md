@@ -102,6 +102,8 @@ If you want to make an app that uses the filesystem, the FS interface lives unde
 > *“But why can’t I just write to system?”*  
 > Because the system is the real website, not the virtual filesystem.  
 > You’re editing the OS, not the server. Okay?
+> *“But why is the OS internals on the server and not in the FS?”*
+> Because I tested & created UI before FS :(
 
 ---
 
