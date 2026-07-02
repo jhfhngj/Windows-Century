@@ -68,7 +68,7 @@ function loadPyScript(code, callback) {
     try {
         const script = document.createElement('script');
         script.textContent = code;
-        script.type = 'py'; // does this hurt no
+        script.type = 'py'; // does this hurt yes
         script.setAttribute("config","/conf.json")
         script.onload = () => {
             console.log(`Script loaded: ${code}`);
@@ -103,6 +103,7 @@ menu.style.border = "2px outset #fff"
 menu.style.padding = "4px"
 menu.style.display = "flex"
 menu.style.flexDirection = "column"
+menu.id = "0x001929FEFF"
 
 var menuOpen = false
 // Add start button listener
