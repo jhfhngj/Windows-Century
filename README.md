@@ -9,7 +9,7 @@ A browser‑native operating system simulation with a persistent virtual filesys
 
 ## 🚀 Overview
 Windows Century is a fake OS that runs entirely in your browser.  
-It’s inspired by the Windows93/96/97/99 lineage, but built with a more true, simple approach.
+It’s inspired by the Windows93/96/97/99 lineage, but built with a more simple approach.
 
 The system includes:
 
