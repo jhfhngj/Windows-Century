@@ -1,4 +1,5 @@
 import { WebCode } from "/system/libs/webcode.js"
+import { URLer } from "/system/important/fsurl";
 function addMiniDIV(minidiv) {
     document.body.appendChild(minidiv);
 }
