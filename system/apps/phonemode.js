@@ -7,7 +7,7 @@ win.newButton("Y  e  s",function(){
     car.textContent += "\nResize start menu"
     var menu = document.getElementById("0x001929FEFF")
     menu.style.width = window.innerWidth + "px"
-    menu.style.height = (window.innerHeight-30) + "px"
+    menu.style.height = (window.innerHeight-0) + "px"
     car.textContent += "\nMenu Yes."
     menu.style.opacity = "1"
     menu.style.pointerEvents = "all"
