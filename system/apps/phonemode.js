@@ -11,6 +11,8 @@ win.newButton("Y  e  s",function(){
     car.textContent += "\nMenu Yes."
     menu.style.opacity = "1"
     menu.style.pointerEvents = "all"
+    car.textContent += "\nRemove taskbar"
+    document.getElementById("taskbar").remove()
     car.textContent += "\nRemove window"
     setInterval(win.remove,2000)
 })
