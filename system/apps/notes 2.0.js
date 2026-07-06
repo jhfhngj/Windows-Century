@@ -3,7 +3,7 @@ import { splitFilenamePath, newFile } from '/system/important/fs.js'
 
 var win = new WindowCreator
 
-var myCodeMirror = win.newTextArea()
+var myCodeMirror = win.newTextArea("notes")
 
 win.newText("File path?")
 var fp = win.newInput()

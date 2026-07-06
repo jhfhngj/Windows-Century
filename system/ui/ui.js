@@ -206,6 +206,7 @@ export function renderWindow(title, bodyy, width, height, icon) {
     windw.style.border = "2px solid black"
     dragElement(windw,titlebar)
     addMiniDIV(windw);
+    windw.id = "window-" + title.replace(/[^a-zA-Z0-9_-]/g, "-");
     windw.onclick = function(){
         focused = windw
     }

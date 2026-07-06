@@ -58,13 +58,15 @@ function loadScript(url, callback) {
         script.onload = () => {
             console.log(`Script loaded: ${url}`);
             if (typeof callback === 'function') callback(url);
-        };
+        };document.head.appendChild(script);
         script.onerror = () => {
             console.error(`Failed to load script: ${url}`);
+            script.remove()
         };
-        document.head.appendChild(script);
+        
     } catch (err) {
         console.error("Error loading script:", err);
+        script.remove()
     }
 }
 let e = null;

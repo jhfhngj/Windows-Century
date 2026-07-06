@@ -90,7 +90,7 @@ for (const [filename, code] of listDir("/apps/")) {
     button.className = "win95-button"
     button.textContent = filename.replace(".js", "")
     button.onclick = function(){loadScript(code)}
-    button.id = filename
+    button.id = "app-" + filename.replace(/[^a-zA-Z0-9_-]/g, "-");
     menu.appendChild(button)
 }
 menu.style.opacity = "0"

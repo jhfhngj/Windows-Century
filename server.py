@@ -46,7 +46,7 @@ async def echo(websocket):
                 threading.Thread(target=serve_http, daemon=True).start()
 
                 # Write HTML file
-                with open("server/index.html", "w") as f:
+                with open("./server/index.html", "w") as f:
                     f.write(html)
 
                 # Tell Century to load the HTTP server

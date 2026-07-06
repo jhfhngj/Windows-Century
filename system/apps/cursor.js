@@ -15,6 +15,7 @@ function createCursor() {
     cursor.click = function() {
         if (cursor.selected) {
             cursor.selected.click();
+            cursor.selected.focus()
         }
     };
 
@@ -37,9 +38,8 @@ var cursor = createCursor();
 cursor.moveTo(document.getElementById("start-button"), function() {
     cursor.click();
 
-    cursor.moveTo(document.getElementById("Notes 2.0.js"), function() {
+    cursor.moveTo(document.getElementById("app-Notes-2-0-js"), function() {
         cursor.click();
-
         cursor.moveTo(document.getElementById("notes"), function() {
             cursor.click();
             cursor.type("THis is a CUrsor doing NOt a Single Job for you!");
