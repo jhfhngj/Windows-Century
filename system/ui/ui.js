@@ -203,7 +203,7 @@ export function renderWindow(title, bodyy, width, height, icon) {
     windw.style.height = height + "px";
 
     // Border
-    windw.style.border = "2px solid black"
+    windw.style.border = "1px solid black"
     dragElement(windw,titlebar)
     addMiniDIV(windw);
     windw.id = "window-" + title.replace(/[^a-zA-Z0-9_-]/g, "-");
